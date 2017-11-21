@@ -1,8 +1,9 @@
 import os
 import gzip
 
+
 class Preprocessing_BTC_2010:
-    def __init__(folder, outfile):
+    def __init__(self, folder, outfile):
         self.folder = folder
         self.out = outfile
 
@@ -25,5 +26,3 @@ class Preprocessing_BTC_2010:
                 p = triple[1]
                 o = ' '.join(triple[2:])
                 out.write(s + '\t' + p + '\t' + o + '\n')
-
-
