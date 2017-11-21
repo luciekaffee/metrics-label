@@ -1,0 +1,5 @@
+import numpy as np
+
+class CompletenessEvaluator:
+    def __init__(param):
+        self.param = param
