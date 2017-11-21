@@ -24,5 +24,5 @@ class Preprocessing_BTC_2010:
             if not os.path.exists(file):
                 break
             print 'Processing file btc-2010-chunk-' + str(counter).zfill(3) + '.gz'
-            process_file(file)
+            self.process_file(file)
             counter += 1

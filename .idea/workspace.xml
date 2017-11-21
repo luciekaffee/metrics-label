@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="dc7efc90-b253-4526-a582-34340470a040" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/preprocessing/preprocessing_dumps.py" afterPath="$PROJECT_DIR$/preprocessing/preprocessing_dumps.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/run.py" afterPath="$PROJECT_DIR$/run.py" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,8 +27,8 @@
       <file leaf-file-name="preprocessing_dumps.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/preprocessing/preprocessing_dumps.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="11" lean-forward="false" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+            <state relative-caret-position="345">
+              <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -66,8 +65,8 @@
         <option value="$PROJECT_DIR$/evaluators/CompletenessEvaluator" />
         <option value="$PROJECT_DIR$/preprocessing/__init__.py" />
         <option value="$PROJECT_DIR$/preprocessing/preprocessing-btc2010.py" />
-        <option value="$PROJECT_DIR$/preprocessing/preprocessing_dumps.py" />
         <option value="$PROJECT_DIR$/run.py" />
+        <option value="$PROJECT_DIR$/preprocessing/preprocessing_dumps.py" />
       </list>
     </option>
   </component>
@@ -229,8 +228,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/preprocessing/preprocessing_dumps.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="11" lean-forward="false" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+        <state relative-caret-position="345">
+          <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
