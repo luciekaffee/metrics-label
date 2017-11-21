@@ -8,7 +8,11 @@ class Preprocessing_BTC_2010:
         self.out = outfile
 
     def process_file(self, filepath):
-        file = gzip.open(filepath)
+        try:
+            file = gzip.open(filepath)
+        except err:
+            print err
+            return
         for line in file:
             with open(self.out, 'a+') as out:
                 triple = line.split()[:-2]
@@ -18,8 +22,8 @@ class Preprocessing_BTC_2010:
                 out.write(s + '\t' + p + '\t' + o + '\n')
 
     def run(self):
-        counter = 000
-        while True:
+        counter = 0
+        while counter < 10:
             file = self.folder + 'btc-2010-chunk-' + str(counter).zfill(3) + '.gz'
             if not os.path.exists(file):
                 break
