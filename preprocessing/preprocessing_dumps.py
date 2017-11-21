@@ -7,16 +7,6 @@ class Preprocessing_BTC_2010:
         self.folder = folder
         self.out = outfile
 
-    def getData(self):
-        counter = 000
-        while True:
-            file = self.folder + 'btc-2010-chunk-' + str(counter).zfill(3) + '.gz'
-            if not os.path.exists(file):
-                break
-            print 'Processing file btc-2010-chunk-' + str(counter).zfill(3) + '.gz'
-            process_file(file)
-            counter += 1
-
     def process_file(self, filepath):
         file = gzip.open(filepath)
         for line in file:
@@ -26,3 +16,13 @@ class Preprocessing_BTC_2010:
                 p = triple[1]
                 o = ' '.join(triple[2:])
                 out.write(s + '\t' + p + '\t' + o + '\n')
+
+    def run(self):
+        counter = 000
+        while True:
+            file = self.folder + 'btc-2010-chunk-' + str(counter).zfill(3) + '.gz'
+            if not os.path.exists(file):
+                break
+            print 'Processing file btc-2010-chunk-' + str(counter).zfill(3) + '.gz'
+            process_file(file)
+            counter += 1
