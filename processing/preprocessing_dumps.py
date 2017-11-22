@@ -23,7 +23,7 @@ class Preprocessing_BTC_2010:
 
     def run(self):
         counter = 0
-        while counter < 10:
+        while True:
             file = self.folder + 'btc-2010-chunk-' + str(counter).zfill(3) + '.gz'
             if not os.path.exists(file):
                 break
