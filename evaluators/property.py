@@ -38,7 +38,10 @@ class LabelingProperties:
     limits a dictornary to all entries with a value of at least 10.000
     """
     def limit(self, data):
+        delete = []
         for k,v in data.iteritems():
             if v <= 10000:
-                del data[k]
+                delete.append(k)
+        for d in delete:
+            del data[d]
         return data
