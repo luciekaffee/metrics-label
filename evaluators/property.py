@@ -1,4 +1,5 @@
 import re
+from dateutil.parser import parse
 
 """
 Class to get the properties used for labeling
@@ -18,14 +19,18 @@ class LabelingProperties:
             for line in infile:
                 tmp = line.split('\t')
 
+                # check if string is number
+                if tmp[2].strip().replace('"').isdigit():
+                    continue
+
+                pattern = re.compile("<.*>")
                 # use all datatype string
-                if '^^<http://www.w3.org/2001/XMLSchema#string>' in tmp[2]:
+                if '^^<http://www.w3.org/2001/XMLSchema#string>' in tmp[2] and not not pattern.match(tmp[2]):
                     if not tmp[1] in labeling_properties:
                         labeling_properties[tmp[1]] = 1
                     else:
                         labeling_properties[tmp[1]] += 1
 
-                pattern = re.compile("<.*>")
                 if not pattern.match(tmp[2]) and not 'XMLSchema' in tmp[2]:
                     if not tmp[1] in labeling_properties:
                         labeling_properties[tmp[1]] = 1
@@ -33,6 +38,14 @@ class LabelingProperties:
                         labeling_properties[tmp[1]] += 1
 
         return labeling_properties
+
+
+    def is_date(string):
+        try:
+            parse(string)
+            return True
+        except ValueError:
+            return False
 
     """
     limits a dictornary to all entries with a value of at least 10.000
