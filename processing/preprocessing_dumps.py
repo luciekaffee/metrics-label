@@ -33,7 +33,6 @@ class Preprocessing_BTC_2010:
         nirs = []
         with gzip.open(nirpath) as infile:
             for line in infile:
-                print line
                 if ' ' in line:
                     nirs.append(line.split()[0].strip())
         return nirs
