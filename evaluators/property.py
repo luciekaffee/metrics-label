@@ -20,12 +20,14 @@ class LabelingProperties:
                 tmp = line.split('\t')
 
                 # check if string is number
-                if tmp[2].strip().replace('"').isdigit():
+                #if tmp[2].strip().replace('"', '').isdigit():
+                #    continue
+                if '"' not in tmp[2]:
                     continue
 
                 pattern = re.compile("<.*>")
                 # use all datatype string
-                if '^^<http://www.w3.org/2001/XMLSchema#string>' in tmp[2] and not not pattern.match(tmp[2]):
+                if '^^<http://www.w3.org/2001/XMLSchema#string>' in tmp[2] and not pattern.match(tmp[2]):
                     if not tmp[1] in labeling_properties:
                         labeling_properties[tmp[1]] = 1
                     else:
