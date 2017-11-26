@@ -3,10 +3,9 @@ import gzip
 
 
 class Preprocessing_BTC_2010:
-    def __init__(self, nirpath, folder, outfile):
+    def __init__(self,  folder, outfile):
         self.folder = folder
         self.out = outfile
-        self.nir = self.getNIRS(nirpath)
 
     def process_file(self, filepath):
         file = gzip.open(filepath)
@@ -16,8 +15,7 @@ class Preprocessing_BTC_2010:
                 s = triple[0].strip()
                 p = triple[1].strip()
                 o = ' '.join(triple[2:]).strip()
-                if s in self.nir:
-                    out.write(s + '\t' + p + '\t' + o + '\n')
+                out.write(s + '\t' + p + '\t' + o + '\n')
 
     def run(self):
         counter = 0
@@ -28,6 +26,15 @@ class Preprocessing_BTC_2010:
             print 'Processing file btc-2010-chunk-' + str(counter).zfill(3) + '.gz'
             self.process_file(file)
             counter += 1
+
+    def limit(self, nirpath, newoutfile):
+        nirs = self.getNIRS(nirpath)
+        newfile = open(newoutfile, 'w')
+        with open(self.out) as orgfile:
+            for line in orgfile:
+                triple = line.strip().split('\t')
+                if triple[0].strip() in nirs:
+                    newfile.write(line)
 
     def getNIRS(self, nirpath):
         nirs = []

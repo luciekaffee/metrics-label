@@ -36,19 +36,28 @@ class CompletenessEvaluator:
 
     def run(self, dataPath, labelingPropertiesPath):
         labelingProperties = self.getProperties(labelingPropertiesPath)
-        #numberLabels = self.getNumberLabels(dataPath, labelingProperties)
+        numberLabels = self.getLabeledURIs(dataPath, labelingProperties)
+        return len(numberLabels)
 
-    def getNumberLabels(self, datapath, labelingProperties):
+    def getLabeledURIs(self, datapath, labelingProperties):
+        uris = []
         with open(datapath) as data:
             for line in data:
                 tmp = line.split('\t')
+                if tmp[1].strip() in labelingProperties:
+                    if tmp[0].strip() not in uris:
+                        uris.append(tmp[0].strip())
+        return uris
+
 
     def getProperties(self, labelingPropertiesPath):
         properties = []
         with open(labelingPropertiesPath) as csvFile:
             reader = csv.reader(csvFile)
-            properties = reader.next()
-        print properties
+            properties = reader.next()[0].split('\t')
         return properties
 
 
+class EfficientAccessibilityEvaluator:
+    def run(self):
+        return None

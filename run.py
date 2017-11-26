@@ -3,18 +3,19 @@ from processing.writer import *
 from evaluators.property import *
 from evaluators.evaluator import *
 
-pre_btc_2010 = Preprocessing_BTC_2010( '../btc-2010/redirects.nx.gz', '../btc-2010/', 'data/1-btc-2010.csv')
+pre_btc_2010 = Preprocessing_BTC_2010('../btc-2010/', 'data/1-btc-2010.csv')
 label_properties = LabelingProperties()
 writer = DictWriter()
-completeness = CompletenessEvaluator()
+LC = CompletenessEvaluator()
 
 
+# @todo: writer for the entities, similar to properties too!
 pre_btc_2010.run()
-properties = label_properties.run('data/1-btc-2010.csv')
+pre_btc_2010.limit('../btc-2010/redirects.nx.gz', 'data/nir-btc-2010.csv')
+properties = label_properties.run('data/nir-btc-2010.csv')
 properties =label_properties.limit(properties)
-writer.write('data/properties.csv', properties)
+writer.write('data/1-properties.csv', properties)
 
 ### Evaluation ###
 
-completeness.run('data/1-btc-2010.csv', 'data/properties.csv')
-
+print LC.run('data/nir-btc-2010.csv', 'data/1-properties.csv')
