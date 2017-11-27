@@ -37,9 +37,9 @@ class Preprocessing_BTC_2010:
                     newfile.write(line)
 
     def getNIRS(self, nirpath):
-        nirs = []
+        nirs = {}
         with gzip.open(nirpath) as infile:
             for line in infile:
                 if ' ' in line:
-                    nirs.append(line.split()[0].strip())
+                    nirs[line.split()[0].strip()] = ''
         return nirs

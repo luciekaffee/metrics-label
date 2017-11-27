@@ -10,12 +10,13 @@ LC = CompletenessEvaluator()
 
 
 # @todo: writer for the entities, similar to properties too!
-pre_btc_2010.run()
-pre_btc_2010.limit('../btc-2010/redirects.nx.gz', 'data/nir-btc-2010.csv')
-properties = label_properties.run('data/nir-btc-2010.csv')
+#pre_btc_2010.run()
+pre_btc_2010.limit('../btc-2010/redirects.nx.gz', 'data/1-nir-btc-2010.csv')
+writer.writeEntities()
+properties = label_properties.run('data/1-nir-btc-2010.csv')
 properties =label_properties.limit(properties)
-writer.write('data/1-properties.csv', properties)
+writer.write('data/2-properties.csv', properties)
 
 ### Evaluation ###
 
-print LC.run('data/nir-btc-2010.csv', 'data/1-properties.csv')
+print LC.run('data/1-nir-btc-2010.csv', 'data/2-properties.csv')

@@ -9,5 +9,3 @@ class DictWriter():
             w = csv.DictWriter(out, data.keys(), delimiter='\t')
             w.writeheader()
             w.writerow(data)
-
-
