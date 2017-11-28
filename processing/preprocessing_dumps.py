@@ -43,3 +43,18 @@ class Preprocessing_BTC_2010:
                 if ' ' in line:
                     nirs[line.split()[0].strip()] = ''
         return nirs
+
+class Preprocessing_Wikidata:
+    def __init__(self,  infile, outfile):
+        self.inf = infile
+        self.out = outfile
+
+    def run(self):
+        outfile = open(self.out, 'a+')
+        with gzip.open(self.inf) as file:
+            for line in file:
+                triple = line.split()
+                s = triple[0].strip()
+                p = triple[1].strip()
+                o = ' '.join(triple[2:]).strip()
+                out.write(s + '\t' + p + '\t' + o + '\n')
