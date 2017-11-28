@@ -11,11 +11,13 @@ LC = CompletenessEvaluator()
 
 # @todo: writer for the entities, similar to properties too!
 #pre_btc_2010.run()
+# print "Processed dump"
 pre_btc_2010.limit('../btc-2010/redirects.nx.gz', 'data/1-nir-btc-2010.csv')
-writer.writeEntities()
+print "Created files with only NIR triples"
 properties = label_properties.run('data/1-nir-btc-2010.csv')
 properties =label_properties.limit(properties)
 writer.write('data/2-properties.csv', properties)
+print "Processed labeling properties"
 
 ### Evaluation ###
 
