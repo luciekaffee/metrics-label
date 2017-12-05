@@ -19,6 +19,10 @@ awk '{print $2"\n"$3}' $FILE | grep ^\<http | sort | uniq > objects.csv
 echo "Created Properties and Objects File"
 wc -l objects.csv
 
+grep '\@' labels.csv | sed 's/.*\@//g' | awk '{$1=$1};1' | sort| uniq -c > languages.csv
+echo "Created Languages File"
+wc -l languages.csv
+
 echo "Task 1"
 echo "Completeness"
 
@@ -45,3 +49,12 @@ awk '{print $1}' labels.csv | sort | uniq -d | wc -l
 
 echo "Number of entities that have more than one label with the same property"
 awk '{print $1 $2}' labels.csv | sort | uniq -d | wc -l
+
+echo "Task 4"
+echo "Multilinguality"
+
+echo "Number of languages used"
+wc -l languages.csv
+
+echo "Number of labels in all languages"
+cat languages.csv

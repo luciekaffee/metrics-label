@@ -1,7 +1,9 @@
 import os
 import gzip
 
-
+"""
+Class to preprocess BTC 2010 dump
+"""
 class Preprocessing_BTC_2010:
     def __init__(self,  folder, outfile):
         self.folder = folder
@@ -44,17 +46,11 @@ class Preprocessing_BTC_2010:
                     nirs[line.split()[0].strip()] = ''
         return nirs
 
-class Preprocessing_Wikidata:
-    def __init__(self,  infile, outfile):
-        self.inf = infile
-        self.out = outfile
 
-    def run(self):
-        outfile = open(self.out, 'a+')
-        with gzip.open(self.inf) as file:
-            for line in file:
-                triple = line.split()
-                s = triple[0].strip()
-                p = triple[1].strip()
-                o = ' '.join(triple[2:]).strip()
-                out.write(s + '\t' + p + '\t' + o + '\n')
+"""
+Call class and run it
+"""
+pre_btc_2010 = Preprocessing_BTC_2010('../btc-2010/', 'data/1-btc-2010.csv')
+
+pre_btc_2010.run()
+pre_btc_2010.limit('../btc-2010/redirects.nx.gz', 'data/1-nir-btc-2010.csv')

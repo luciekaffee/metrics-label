@@ -1,0 +1,12 @@
+699913943 lines nir-btc-2010.csv
+find unique subjects:
+
+awk '{print $1}' data/1-nir-btc-2010.csv | sort | uniq -u | wc -l
+
+
+Unique URIs in BTC 2010 (after excluding non-URIS)
+27,784
+Number of lines in redirects
+6,006,415
+Number of Enities in Wikidata
+1,637,769
