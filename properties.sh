@@ -2,4 +2,4 @@
 
 FILE=$1
 
-awk '{print $2}' $FILE | sort | uniq -c
+grep '".*"' $FILE | awk '{print $2}' | sort | uniq -c

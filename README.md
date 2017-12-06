@@ -17,4 +17,9 @@ After preprocessing or simply unzipping the datasets, a file with labeling prope
 We used properties.sh to see a listing of properties and their usage in a dump and select manually the ones that are used for labeling.
 
 Finally completeness.sh can be run.
-This script takes two arguments: The dataset file, and the labeling properties file.
+This script takes two or three arguments: The dataset file, and the labeling properties file.
+Aditionally, if unambiguity should run with a different subset of properties those can be passed as the third argument.
+
+Hint:
+As Wikidata's database dump is quite large and we can assume that the data is not as noisy as our other datasets, it is recommend 
+for performance reasons to comment the removal of multiple lines in the beginning of the bash script.

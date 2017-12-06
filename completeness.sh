@@ -2,7 +2,7 @@
 
 FILE=$1
 PROPERTIES=$2
-
+LABELS="${3:-$PROPERTIES}"
 
 awk '!seen[$0]++' $FILE > tmp && mv tmp $FILE
 echo "Removed duplicate lines"
@@ -14,6 +14,10 @@ wc -l labels.csv
 awk '{print $1}' labels.csv > has-labels.csv
 echo "Created has-labels File"
 wc -l has-labels.csv
+
+grep -Fwf $LABELS $FILE > labels-only.csv
+echo "Created Labels File"
+wc -l labels-only.csv
 
 awk '{print $2"\n"$3}' $FILE | grep ^\<http | sort | uniq > objects.csv
 echo "Created Properties and Objects File"
@@ -45,10 +49,10 @@ echo "Task 3"
 echo "Unambiguity"
 
 echo "Number of entities that have more than one label with any property"
-awk '{print $1}' labels.csv | sort | uniq -d | wc -l
+awk '{print $1}' labels-only.csv | sort | uniq -d | wc -l
 
 echo "Number of entities that have more than one label with the same property"
-awk '{print $1 $2}' labels.csv | sort | uniq -d | wc -l
+awk '{print $1 $2}' labels-only.csv | sort | uniq -d | wc -l
 
 echo "Task 4"
 echo "Multilinguality"
