@@ -19,7 +19,11 @@ grep -Fwf $LABELS $FILE > labels-only.csv
 echo "Created Labels File"
 wc -l labels-only.csv
 
-awk '{print $2"\n"$3}' $FILE | grep ^\<http | sort | uniq > objects.csv
+awk '{print $2"\n"$3}' $FILE | grep ^\<http | sort | uniq > objects-properties.csv
+echo "Created Properties and Objects File"
+wc -l objects-properties.csv
+
+awk '{print $3}' $FILE | grep ^\<http | sort | uniq > objects.csv
 echo "Created Properties and Objects File"
 wc -l objects.csv
 
@@ -40,9 +44,16 @@ echo "Task 2"
 echo "Efficient accessibility"
 
 echo "Unique properties and objects"
-wc -l objects.csv
+wc -l objects-properties.csv
 
 echo "Number of unique properties and objects with one or more labels"
+grep -Fwf objects-properties.csv has-labels.csv | sort | uniq | wc -l
+
+
+echo "Unique objects"
+wc -l objects.csv
+
+echo "Number of unique objects with one or more labels"
 grep -Fwf objects.csv has-labels.csv | sort | uniq | wc -l
 
 echo "Task 3"

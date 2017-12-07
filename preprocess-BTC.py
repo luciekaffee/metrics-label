@@ -65,15 +65,13 @@ class Preprocessing_BTC_2014:
                 out.write(s + '\t' + p + '\t' + o + '\n')
 
     def run(self):
-        for i in range(1,14)
-            counter = 0
-            while True:
-                file = self.folder + str().zfill(3) 'btc-2010-chunk-' + str(counter).zfill(2) + '.gz'
-                if not os.path.exists(file):
-                    break
-                print 'Processing file btc-2010-chunk-' + str(counter).zfill(2) + '.gz'
-                self.process_file(file)
-                counter += 1
+        for i in range(1,14):
+            dir = self.folder + str(i).zfill(2) + '/'
+            for filename in os.listdir(dir):
+                if filename.startswith('data.nq') and filename.endswith('.gz'):
+                    file = os.path.join(dir, filename)
+                    print 'Processing file ' + filename + ' from folder ' + str(i)
+                    self.process_file(file)
 
     def limit(self, nirpath, newoutfile):
         nirs = self.getNIRS(nirpath)
@@ -97,7 +95,7 @@ class Preprocessing_BTC_2014:
 """
 Call class and run it
 """
-pre_btc_2014 = Preprocessing_BTC_2014('../btc-2014/projects/btc-2014/data/crawls', 'data/btc-2014.csv')
+pre_btc_2014 = Preprocessing_BTC_2014('../btc-2014/projects/btc-2014/data/crawls/', 'data/btc-2014.csv')
 
 pre_btc_2014.run()
 pre_btc_2014.limit('../btc-2014/projects/btc-2014/data/redirects.nx.gz', 'data/nir-btc-2014.csv')
