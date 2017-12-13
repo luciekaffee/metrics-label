@@ -1,0 +1,8 @@
+http://purl.org/dc/terms/abstract
+http://purl.org/dc/terms/alternative
+http://purl.org/dc/terms/description
+http://purl.org/dc/terms/title
+http://www.w3.org/2000/01/rdf-schema#label
+http://www.w3.org/2004/02/skos/core#hiddenLabel
+http://www.w3.org/2004/02/skos/core#prefLabel
+http://xmlns.com/foaf/0.1/name
