@@ -2,7 +2,7 @@
 
 FILE=$1
 PROPERTIES=$2
-LABELS="${3:-$PROPERTIES}"
+#LABELS="${3:-$PROPERTIES}"
 
 awk '!seen[$0]++' $FILE > tmp && mv tmp $FILE
 echo "Removed duplicate lines"
@@ -11,15 +11,12 @@ grep -Fwf $PROPERTIES $FILE > labels.csv
 echo "Created Labels File"
 wc -l labels.csv
 
-awk '{print $1}' labels.csv > has-labels.csv
+awk '{print $1}' labels.csv | sort | uniq > has-labels.csv
 echo "Created has-labels File"
 wc -l has-labels.csv
 
-grep -Fwf $LABELS $FILE > labels-only.csv
-echo "Created Labels File"
-wc -l labels-only.csv
-
-awk '{print $2"\n"$3}' $FILE | grep ^\<http | sort | uniq > objects-properties.csv
+awk '{print $2"\n"$3}' $FILE | grep e | sort | uniq > objects-properties.csv
+# For Wikidata grep for www.wikidata.org/entity/
 echo "Created Properties and Objects File"
 wc -l objects-properties.csv
 
@@ -43,11 +40,12 @@ awk '{print $1}' labels.csv | sort | uniq | wc -l
 echo "Task 2"
 echo "Efficient accessibility"
 
-echo "Unique properties and objects"
-wc -l objects-properties.csv
+echo "Unique properties"
+awk '{print $2}' data.nt | wc -l
 
 echo "Number of unique properties and objects with one or more labels"
-grep -Fwf objects-properties.csv has-labels.csv | sort | uniq | wc -l
+awk '{print $2}' data.nt | grep has-labels.csv | sort | uniq | wc -l
+#grep -Fwf objects-properties.csv has-labels.csv | sort | uniq | wc -l
 
 
 echo "Unique objects"
@@ -55,15 +53,6 @@ wc -l objects.csv
 
 echo "Number of unique objects with one or more labels"
 grep -Fwf objects.csv has-labels.csv | sort | uniq | wc -l
-
-echo "Task 3"
-echo "Unambiguity"
-
-echo "Number of entities that have more than one label with any property"
-awk '{print $1}' labels-only.csv | sort | uniq -d | wc -l
-
-echo "Number of entities that have more than one label with the same property"
-awk '{print $1 $2}' labels-only.csv | sort | uniq -d | wc -l
 
 echo "Task 4"
 echo "Multilinguality"

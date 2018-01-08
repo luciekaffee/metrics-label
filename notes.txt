@@ -8,5 +8,27 @@ Unique URIs in BTC 2010 (after excluding non-URIS)
 27,784
 Number of lines in redirects
 6,006,415
-Number of Enities in Wikidata
-1,637,769
+
+
+TASK 1
+Number of Unique Subjects in Wikidata
+80697007
+Number of Entities with one or more labels in Wikidata
+38720538
+
+TASK 2
+Number of Unique Objects and Properties in Wikidata
+40323799
+Number of Objects and Properties with one or more labels in Wikidata
+
+---
+Number of Unique Objects in Wikidata
+
+Number of Objects with one or more labels in Wikidata
+
+
+TASK 3
+Number of entities that have more than one label with any property
+1068119
+Number of entities that have more than one label with same property
+1068119
