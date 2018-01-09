@@ -15,7 +15,7 @@ awk '{print $1}' labels.csv | sort | uniq > has-labels.csv
 echo "Created has-labels File"
 wc -l has-labels.csv
 
-awk '{print $2"\n"$3}' $FILE | grep e | sort | uniq > objects-properties.csv
+awk '{print $2"\n"$3}' $FILE | grep ^\<http | sort | uniq > objects-properties.csv
 # For Wikidata grep for www.wikidata.org/entity/
 echo "Created Properties and Objects File"
 wc -l objects-properties.csv
