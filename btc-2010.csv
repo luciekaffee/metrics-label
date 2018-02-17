@@ -1,0 +1,62 @@
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://purl.uniprot.org/uniprot/C0PNP8> <http://w$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://purl.uniprot.org/core/organism> <http://$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://purl.uniprot.org/taxonomy/4577> <http://www$
+<http://purl.uniprot.org/uniprot/C0PNP8> <http://purl.uniprot.org/core/existence> <http://purl.uniprot.org/core/Evidence_at_Transcript_Level_Existence$
+<http://purl.uniprot.org/uniprot/C0PNP8> <http://purl.uniprot.org/core/classifiedWith> <http://purl.uniprot.org/keywords/808> <http://www.uniprot.org/$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://purl.uniprot.org/uniprot/C0PNP8> <http://w$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://purl.uniprot.org/core/classifiedWith> <h$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://purl.uniprot.org/keywords/808> <http://www.$
+<http://purl.uniprot.org/uniprot/C0PNP8> <http://purl.uniprot.org/core/classifiedWith> <http://purl.uniprot.org/go/0016740> <http://www.uniprot.org/un$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://purl.uniprot.org/uniprot/C0PNP8> <http://w$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://purl.uniprot.org/core/classifiedWith> <h$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://purl.uniprot.org/go/0016740> <http://www.un$
+<http://purl.uniprot.org/uniprot/C0PNP8> <http://purl.uniprot.org/core/classifiedWith> <http://purl.uniprot.org/go/0008652> <http://www.uniprot.org/un$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://purl.uniprot.org/uniprot/C0PNP8> <http://w$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://purl.uniprot.org/core/classifiedWith> <h$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://purl.uniprot.org/go/0008652> <http://www.un$
+<http://purl.uniprot.org/uniprot/C0PNP8> <http://purl.uniprot.org/core/sequence> <http://purl.uniprot.org/isoforms/C0PNP8-1> <http://www.uniprot.org/u$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.uniprot.org/core/Submission_Citation> <h$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/title> "Maize Full-length cDNA Project." <http://www.uniprot.org/uniprot/$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Yu Y." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Currie J." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Lomeli R." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Angelova A." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Collura K." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Wissotski M." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Campos D." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Kudrna D." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Golser W." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Ashely E." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Haller K." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Descour A." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Fernandes J." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Soderlund C." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/author> "Walbot V." <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/date> "2009-02" <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_1> <http://purl.uniprot.org/core/submittedTo> "EMBL/GenBank/DDBJ" <http://www.uniprot.org/uniprot/C0PNP8.r$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.uniprot.org/core/Citation_Statement> <ht$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_2> <http://purl.uniprot.org/core/scope> "NUCLEOTIDE SEQUENCE" <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_2> <http://purl.uniprot.org/core/context> <http://www.uniprot.org/uniprot/C0PNP8.rdf#_3> <http://www.unipr$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://www.uniprot.org/uniprot/C0PNP8.rdf#_2> <ht$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://purl.uniprot.org/core/context> <http://w$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://www.uniprot.org/uniprot/C0PNP8.rdf#_3> <htt$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_2> <http://purl.uniprot.org/core/source> <http://purl.uniprot.org/embl-cds/ACN36814.1> <http://www.uniprot$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.uniprot.org/core/Strain> <http://www.uni$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_3> <http://www.w3.org/2000/01/rdf-schema#label> "B73" <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_4> <http://purl.uniprot.org/core/source> <http://purl.uniprot.org/embl-cds/ACN36814.1> <http://www.uniprot$
+<http://purl.uniprot.org/embl-cds/ACN36814.1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.uniprot.org/core/Nucleotide_Resource> <ht$
+<http://purl.uniprot.org/embl-cds/ACN36814.1> <http://purl.uniprot.org/core/database> "EMBL" <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://purl.uniprot.org/embl-cds/ACN36814.1> <http://purl.uniprot.org/core/locatedOn> <http://purl.uniprot.org/embl/BT069917> <http://www.uniprot.org$
+<http://purl.uniprot.org/embl/BT069917> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.uniprot.org/core/MRNA> <http://www.uniprot.org/$
+<http://purl.uniprot.org/interpro/IPR001048> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.uniprot.org/core/Resource> <http://www.uni$
+<http://purl.uniprot.org/interpro/IPR001048> <http://purl.uniprot.org/core/database> "InterPro" <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://purl.uniprot.org/interpro/IPR001048> <http://www.w3.org/2000/01/rdf-schema#comment> "Asp/Glu/Uridylate_kinase" <http://www.uniprot.org/uniprot$
+<http://purl.uniprot.org/gene3d/G3DSA:3.40.1160.10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.uniprot.org/core/Resource> <http://$
+<http://purl.uniprot.org/gene3d/G3DSA:3.40.1160.10> <http://purl.uniprot.org/core/database> "Gene3D" <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
+<http://purl.uniprot.org/gene3d/G3DSA:3.40.1160.10> <http://www.w3.org/2000/01/rdf-schema#comment> "Aa_kinase" <http://www.uniprot.org/uniprot/C0PNP8.$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.uniprot.org/core/Domain_Assignment_State$
+<http://www.uniprot.org/uniprot/C0PNP8.rdf#_5> <http://purl.uniprot.org/core/hits> "1" <http://www.uniprot.org/uniprot/C0PNP8.rdf> .
