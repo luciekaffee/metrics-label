@@ -4,13 +4,15 @@ class Completeness:
     """ Class to measure completeness of a dataset
     """
 
-    def __init__(self, file, labelproperties):
+    def __init__(self, file, labelproperties, encodeData=False):
         """
         :param file: Filename of the file investigated
         :param labelproperties: filename of the file with labeling properties
+        :param encodeData: whether the data incoming is encoded with haslib.sha256, default False
         """
         self.file = file
         self.labelprop = labelproperties
+        self.encodeData = encodeData
 
 
     def getAllProperties(self):
@@ -29,8 +31,10 @@ class Completeness:
         :param s: string to encode
         :return: int of encoded string
         """
-        return int(hashlib.sha256(s.encode('utf-8')).hexdigest(), 16)
-        #return id(s)
+        if self.encodeData == True:
+            return int(hashlib.sha256(s.encode('utf-8')).hexdigest(), 16)
+        else:
+            return s
 
     def getLabelingProperties(self):
         """ Helper function to get labeling properties
@@ -90,13 +94,15 @@ class Completeness:
 
 class EfficientAccessibility:
 
-    def __init__(self, file, labelproperties):
+    def __init__(self, file, labelproperties, encodeData=False):
         """
         :param file: Filename of the file investigated
         :param labelproperties: filename of the file with labeling properties
+        :param encodeData: whether the data incoming is encoded with haslib.sha256, default False
         """
         self.file = file
         self.labelprop = labelproperties
+        self.encodeData = encodeData
 
     def getLabelingProperties(self):
         """ Helper function to get labeling properties
@@ -113,8 +119,10 @@ class EfficientAccessibility:
         :param s: string to encode
         :return: int of encoded string
         """
-        return int(hashlib.sha256(s.encode('utf-8')).hexdigest(), 16)
-        #return id(s)
+        if self.encodeData == True:
+            return int(hashlib.sha256(s.encode('utf-8')).hexdigest(), 16)
+        else:
+            return s
 
     def getGraphs(self):
         graphs = {}
@@ -157,4 +165,53 @@ class EfficientAccessibility:
             print "Labeled: " + str(labeled[graph])
         print "All Unique: " + str(sum(unique.values()))
         print "Number Graphs: " + str(len(graphs))
+
+class Unambiguity:
+    def __init__(self, file, labelproperties, encodeData=False):
+        """
+        :param file: Filename of the file investigated
+        :param labelproperties: filename of the file with labeling properties
+        :param encodeData: whether the data incoming is encoded with haslib.sha256, default False
+        """
+        self.file = file
+        self.labelprop = labelproperties
+        self.encodeData = encodeData
+
+    def encode(self, s):
+        """ Helper function to encode strings to SHA256 integer
+        :param s: string to encode
+        :return: int of encoded string
+        """
+        if self.encodeData == True:
+            return int(hashlib.sha256(s.encode('utf-8')).hexdigest(), 16)
+        else:
+            return s
+
+    def getLabelingProperties(self):
+        """ Helper function to get labeling properties
+        :return: dict with labeling properties as key and empty [] values
+        """
+        properties = []
+        with open(self.labelprop) as prop:
+            for line in prop:
+                properties.append(self.encode(line.strip()))
+        return properties
+
+    def getSubjects(self):
+        subjects = {}
+        counter_ambig = 0
+        properties = self.getLabelingProperties()
+        for line in self.file:
+            tmp = line.split('\t').strip()
+            if tmp[1] in properties:
+                if tmp[0] in subjects:
+                    counter_ambig += 1
+                else:
+                    subjects.add(tmp[0])
+        return counter_ambig
+
+    def run(self):
+        number_ambig = self.getSubjects()
+        print "number ambigious entities: " + str(number_ambig)
+
 
