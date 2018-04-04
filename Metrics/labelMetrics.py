@@ -4,7 +4,7 @@ class Completeness:
     """ Class to measure completeness of a dataset
     """
 
-    def __init__(self, file, labelproperties, encodeData=False):
+    def __init__(self, file, labelproperties, encodeData=False, seperator='\t'):
         """
         :param file: Filename of the file investigated
         :param labelproperties: filename of the file with labeling properties
@@ -13,6 +13,7 @@ class Completeness:
         self.file = file
         self.labelprop = labelproperties
         self.encodeData = encodeData
+        self.seperator = seperator
 
 
     def getAllProperties(self):
@@ -22,7 +23,9 @@ class Completeness:
         unique_propertes = {}
         with open(self.file) as infile:
             for line in infile:
-                pred = int(line.split('\t')[1].strip())
+                pred = line.split(self.seperator)[1].strip()
+                if self.encodeData:
+                    pred = int(pred)
                 unique_propertes[pred] = []
         return unique_propertes
 
@@ -56,9 +59,13 @@ class Completeness:
         labeled = {}
         with open(self.file) as infile:
             for line in infile:
-                sub = int(line.split('\t')[0].strip())
+                sub = line.split(self.seperator)[0].strip()
+                pred = line.split(self.seperator)[1].strip()
+                if self.encodeData:
+                    sub = int(sub)
+                    pred = int(pred)
                 if sub in unique_properties:
-                    if int(line.split('\t')[1].strip()) in labeling_properties:
+                    if pred in labeling_properties:
                         labeled[sub] = []
         return [len(unique_properties), len(labeled)]
 
@@ -72,9 +79,13 @@ class Completeness:
         labeled = {}
         with open(self.file) as infile:
             for line in infile:
-                sub = int(line.split('\t')[0].strip())
+                sub = line.split(self.seperator)[0].strip()
+                pred = line.split(self.seperator)[1].strip()
+                if self.encodeData:
+                    sub = int(sub)
+                    pred = int(pred)
                 unique_sub[sub] = []
-                if int(line.split('\t')[1].strip()) in labeling_properties:
+                if pred in labeling_properties:
                     labeled[sub] = []
         return [len(unique_sub), len(labeled)]
 
@@ -94,7 +105,7 @@ class Completeness:
 
 class EfficientAccessibility:
 
-    def __init__(self, file, labelproperties, encodeData=False):
+    def __init__(self, file, labelproperties, encodeData=False, seperator='\t'):
         """
         :param file: Filename of the file investigated
         :param labelproperties: filename of the file with labeling properties
@@ -103,6 +114,7 @@ class EfficientAccessibility:
         self.file = file
         self.labelprop = labelproperties
         self.encodeData = encodeData
+        self.seperator = seperator
 
     def getLabelingProperties(self):
         """ Helper function to get labeling properties
@@ -128,7 +140,9 @@ class EfficientAccessibility:
         graphs = {}
         with open(self.file) as infile:
             for line in infile:
-                graph = int(line.split('\t')[-1].strip())
+                graph = line.split(self.seperator)[-1].strip()
+                if self.encodeData:
+                    graph = int(graph)
                 graphs[graph] = []
         return graphs
 
@@ -136,7 +150,9 @@ class EfficientAccessibility:
         graphs = {}
         with open(self.file) as infile:
             for line in infile:
-                graph = int(line.split('\t')[-1].strip())
+                graph = line.split(self.seperator)[-1].strip()
+                if self.encodeData:
+                    graph = int(graph)
                 if graph in graphs:
                     graphs[graph] +=1
                 else:
@@ -149,9 +165,17 @@ class EfficientAccessibility:
             tmp = {}
             with open(self.file) as infile:
                 for line in infile:
-                    if graph == int(line.split('\t')[-1].strip()):
-                        if int(line.split('\t')[1].strip()) in labeling_properties:
-                            tmp[int(line.split('\t')[0].strip())] = []
+                    tmp = line.split(self.seperator)
+                    sub = tmp[0].strip()
+                    prop = tmp[1].strip()
+                    g = tmp[-1].strip()
+                    if self.encodeData:
+                        sub = int(sub)
+                        prop = int(prop)
+                        g = int(g)
+                    if graph == g:
+                        if prop in labeling_properties:
+                            tmp[sub] = []
             labeled[graph] = len(tmp)
         return labeled
 
@@ -167,7 +191,7 @@ class EfficientAccessibility:
         print "Number Graphs: " + str(len(graphs))
 
 class Unambiguity:
-    def __init__(self, file, labelproperties, encodeData=False):
+    def __init__(self, file, labelproperties, encodeData=False, seperator='\t'):
         """
         :param file: Filename of the file investigated
         :param labelproperties: filename of the file with labeling properties
@@ -176,6 +200,7 @@ class Unambiguity:
         self.file = file
         self.labelprop = labelproperties
         self.encodeData = encodeData
+        self.seperator = seperator
 
     def encode(self, s):
         """ Helper function to encode strings to SHA256 integer
@@ -198,16 +223,24 @@ class Unambiguity:
         return properties
 
     def getSubjects(self):
-        subjects = {}
+        subjects = set()
         counter_ambig = 0
         properties = self.getLabelingProperties()
-        for line in self.file:
-            tmp = line.split('\t').strip()
-            if tmp[1] in properties:
-                if tmp[0] in subjects:
-                    counter_ambig += 1
-                else:
-                    subjects.add(tmp[0])
+        with open(self.file) as infile:
+            for line in infile:
+                tmp = line.split(self.seperator)
+                sub = tmp[0].strip()
+                pred = tmp[1].strip
+                if self.encodeData:
+                    sub = int(sub)
+                    pred = int(pred)
+                if len(tmp) < 2:
+                    continue
+                if pred in properties:
+                    if sub in subjects:
+                        counter_ambig += 1
+                    else:
+                        subjects.add(sub)
         return counter_ambig
 
     def run(self):

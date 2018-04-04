@@ -1,13 +1,14 @@
 from Metrics.labelMetrics import *
+from Metrics.labelingProperties import *
 
 datafile = '../BNL/bnl.nt'
 properties = 'Properties/properties-bnl.csv'
+seperator = ' '
 
-completness = Completeness(datafile, properties)
-ea = EfficientAccessibility(datafile, properties)
-unam = Unambiguity(datafile, properties)
+#lpe = LabelingPropertiesExtractor(datafile, properties)
+completness = Completeness(datafile, properties, seperator=seperator)
+unam = Unambiguity(datafile, properties, seperator=seperator)
 
-converter.run()
+#lpe.run()
 completness.run()
-ea.run()
 unam.run()
