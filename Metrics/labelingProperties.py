@@ -48,5 +48,5 @@ class LabelingPropertiesExtractor:
             for k,v in properties.iteritems():
                 outfile.write(k + '\t' + str(v) + '\n')
         with open(self.outfile, 'w') as outfile:
-            for k, v in properties.iteritems:
+            for k, v in properties.iteritems():
                 outfile.write(k + '\n')

@@ -230,7 +230,7 @@ class Unambiguity:
             for line in infile:
                 tmp = line.split(self.seperator)
                 sub = tmp[0].strip()
-                pred = tmp[1].strip
+                pred = tmp[1].strip()
                 if self.encodeData:
                     sub = int(sub)
                     pred = int(pred)
@@ -246,5 +246,34 @@ class Unambiguity:
     def run(self):
         number_ambig = self.getSubjects()
         print "number ambigious entities: " + str(number_ambig)
+
+class Multilinguality:
+    def __init__(self, infile, outfile, seperator='\t'):
+        self.infile = infile
+        self.outfile = outfile
+        self.seperator = seperator
+
+    def getlanguages(self):
+        langs = {}
+        with open(self.infile) as infile:
+            for line in infile:
+                if '@' in line:
+                    line = line.replace('.', '').strip()
+                    value = line.split(self.seperator)[-1]
+                    if '@' in value:
+                        lang = value.split('@')[1].strip()
+                        if '"' not in lang:
+                            if lang in langs:
+                                langs[lang] += 1
+                            else:
+                                langs[lang] = 0
+        return langs
+
+    def run(self):
+        langs = self.getlanguages()
+        with open(self.outfile, 'w') as out:
+            for k, v in langs.iteritems():
+                out.write(k + '\t' + str(v) + '\n')
+
 
 

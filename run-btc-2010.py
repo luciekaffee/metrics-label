@@ -1,5 +1,6 @@
 from Preprocessing.convertData import *
 from Metrics.labelMetrics import *
+from Metrics.labelingProperties import *
 
 converter = ConvertData('out.csv', filename='btc-2010.csv')
 completness = Completeness('out.csv', 'Properties/properties-btc2010.csv', True)
