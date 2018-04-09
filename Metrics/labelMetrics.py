@@ -144,6 +144,8 @@ class EfficientAccessibility:
                 if self.encodeData:
                     graph = int(graph)
                 graphs[graph] = []
+        print graphs
+        print "graphs"
         return graphs
 
     def getUniquePerGraph(self):
@@ -157,6 +159,8 @@ class EfficientAccessibility:
                     graphs[graph] +=1
                 else:
                     graphs[graph] = 1
+        print graphs
+        print "unique per graph"
         return graphs
 
     def getLabeledinGraph(self, graphs, labeling_properties):
@@ -177,6 +181,8 @@ class EfficientAccessibility:
                         if prop in labeling_properties:
                             tmp[sub] = []
             labeled[graph] = len(tmp)
+            print graphs
+            print "labeled in graph"
         return labeled
 
     def run(self):
@@ -248,12 +254,23 @@ class Unambiguity:
         print "number ambigious entities: " + str(number_ambig)
 
 class Multilinguality:
+    """
+    Class to investigate the number of languages used in a dataset
+    """
     def __init__(self, infile, outfile, seperator='\t'):
+        """
+        :param infile: Filename of the file investigated
+        :param outfile: Place to write the language results
+        :param seperator: Seperator used in infile
+        """
         self.infile = infile
         self.outfile = outfile
         self.seperator = seperator
 
     def getlanguages(self):
+        """"
+        :return: dict with language and how often they occur
+        """
         langs = {}
         with open(self.infile) as infile:
             for line in infile:
@@ -275,5 +292,109 @@ class Multilinguality:
             for k, v in langs.iteritems():
                 out.write(k + '\t' + str(v) + '\n')
 
+class MonolingualIsland:
+    """
+    Class to investigate how many entities are in one or more languages available
+    """
+    def __init__(self, infile, outfile, encodeData=False, seperator='\t'):
+        """
+        :param infile: Filename of the file investigated
+        :param outfile: Place to write the language results
+        :param seperator: Seperator used in infile
+        """
+        self.infile = infile
+        self.outfile = outfile
+        self.encodeData = encodeData
+        self.seperator = seperator
 
+    def getData(self):
+        data = {}
+        with open(self.infile) as infile:
+            for line in infile:
+                if '@' in line:
+                    line = line.replace('.', '').strip()
+                    value = line.split(self.seperator)[-1]
+                    subject = line.split(self.seperator)[0]
+                    if self.encodeData:
+                        value = int(value)
+                        subject = int(subject)
+                    if '@' in value:
+                        lang = value.split('@')[1].strip()
+                        if '"' not in lang:
+                            if lang not in data:
+                                data[subject] = [lang]
+                            else:
+                                data[subject].append(lang)
+        return data
 
+    def run(self):
+        data = self.getData
+        with open(self.outfile, 'w') as out:
+            for k, v in langs.iteritems():
+                out.write(k + '\t' + str(v) + '\n')
+
+class LabelAndUsage:
+    """
+    This metric measures whether the higher used entities are more likely to have a label as well
+    """
+    def __init__(self, infile, outfile, labelproperties):
+        """
+        :param infile: Filename of the file investigated
+        :param outfile: Place to write the language results
+        :param seperator: Seperator used in infile
+        """
+        self.infile = infile
+        self.outfile = outfile
+        self.seperator = seperator
+        self.labelprop = labelproperties
+
+    def encode(self, s):
+        """ Helper function to encode strings to SHA256 integer
+        :param s: string to encode
+        :return: int of encoded string
+        """
+        if self.encodeData == True:
+            return int(hashlib.sha256(s.encode('utf-8')).hexdigest(), 16)
+        else:
+            return s
+
+    def getlabelingproperties(self):
+        """ Helper function to get labeling properties
+        :return: dict with labeling properties as key and empty [] values
+        """
+        properties = set()
+        with open(self.labelprop) as prop:
+            for line in prop:
+                properties.add(self.encode(line.strip()))
+        return properties
+
+    def getobjects(self):
+        objects = {}
+        with open(self.infile) as infile:
+            for line in infile:
+                tmp = line.split(self.seperator)
+                object = tmp[-1]
+                if 'http' in object:
+                    if object in objects:
+                        objects[object] += 1
+                    else:
+                        objects[object] = 0
+        return objects
+
+    def getlabeledobjects(self, labelingproperties, objects):
+        labeledobjects = set()
+        with open(self.infile) as infile:
+            for line in infile:
+                tmp = line.split(self.seperator)
+                subject = tmp[0]
+                prop = tmp[1]
+                if subject in objects:
+                    if prop in labelingproperties:
+                        labeledobjects.add(subject)
+        return labeledobjects
+
+    def run(self):
+        labelingProperties = self.getlabelingproperties()
+        objects = getobjects()
+        labeledObjects = self.getlabeledobjects(labelingProperties, objects)
+        # plot the number used that have a label vs no label

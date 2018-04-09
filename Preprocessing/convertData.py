@@ -17,12 +17,21 @@ class ConvertData():
         triple = line.strip().split(' ')
         sub = triple[0]
         pred = triple[1]
-        obj = " ".join(triple[2:-2])
-        graph = triple[-2]
-        return str(self.encode(sub)) + '\t' + str(self.encode(pred)) + '\t' + str(self.encode(obj)) + '\t' + str(self.encode(graph))
+        if len(triple) > 3 and 'http' in triple[-2]:
+            obj = " ".join(triple[2:-2])
+            graph = triple[-2]
+        else:
+            obj = " ".join(triple[2:])
 
+        result = str(self.encode(sub)) + '\t' + str(self.encode(pred)) + '\t' + str(self.encode(obj))
+        if graph:
+            result += '\t' + str(self.encode(graph))
+
+        return result
+
+    #todo: out needs to be compressed file, too
     def run_compressed(self):
-        with open(self.outfile, 'w')as out:
+        with open(self.outfile, 'w') as out:
             for filename in os.listdir(self.directory):
                 if filename.endswith(".gz") and filename.startswith('btc'):
                     print filename
@@ -30,11 +39,24 @@ class ConvertData():
                         for line in infile:
                             out.write(self.convert(line) + '\n')
 
+    def run_2014(self):
+        with open(self.outfile, 'w') as out:
+            for i in range(1, 14):
+                dir = self.directory + str(i).zfill(2) + '/'
+                for filename in os.listdir(dir):
+                    if filename.startswith('data.nq') and filename.endswith('.gz'):
+                        filepath = os.path.join(dir, filename)
+                        print 'Processing file ' + filename + ' from directory ' + str(i)
+                        file = gzip.open(filepath)
+                        for line in file:
+                            out.write(self.convert(line) + '\n')
+
+
     def run(self):
         with open(self.outfile, 'w') as out:
             with open(self.infile) as infile:
                 for line in infile:
-                    if len(line.strip().split(' ')) > 3:
+                    if len(line.strip().split(' ')) > 2:
                         out.write(self.convert(line) + '\n')
 
 
