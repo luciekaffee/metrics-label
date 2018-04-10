@@ -40,7 +40,7 @@ class ConvertData():
                             out.write(self.convert(line) + '\n')
 
     def run_2014(self):
-        with open(self.outfile, 'w') as out:
+        with gzip.open(self.outfile, 'wb') as out:
             for i in range(1, 14):
                 dir = self.directory + str(i).zfill(2) + '/'
                 for filename in os.listdir(dir):
