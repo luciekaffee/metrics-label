@@ -1,5 +1,6 @@
 import hashlib
 import numpy
+import gzip
 
 class Completeness:
     """ Class to measure completeness of a dataset
@@ -22,12 +23,15 @@ class Completeness:
         :return: dict with properties as key and empty [] values
         """
         unique_propertes = {}
-        with open(self.file) as infile:
-            for line in infile:
-                pred = line.split(self.seperator)[1].strip()
-                if self.encodeData:
-                    pred = int(pred)
-                unique_propertes[pred] = []
+        if self.file.endswith('.gz'):
+            infile = gzip.open(self.file)
+        else:
+            infile = open(self.file)
+        for line in infile:
+            pred = line.split(self.seperator)[1].strip()
+            if self.encodeData:
+                pred = int(pred)
+            unique_propertes[pred] = []
         return unique_propertes
 
     def encode(self, s):
@@ -58,16 +62,19 @@ class Completeness:
         """
         unique_properties = self.getAllProperties()
         labeled = {}
-        with open(self.file) as infile:
-            for line in infile:
-                sub = line.split(self.seperator)[0].strip()
-                pred = line.split(self.seperator)[1].strip()
-                if self.encodeData:
-                    sub = int(sub)
-                    pred = int(pred)
-                if sub in unique_properties:
-                    if pred in labeling_properties:
-                        labeled[sub] = []
+        if self.file.endswith('.gz'):
+            infile = gzip.open(self.file)
+        else:
+            infile = open(self.file)
+        for line in infile:
+            sub = line.split(self.seperator)[0].strip()
+            pred = line.split(self.seperator)[1].strip()
+            if self.encodeData:
+                sub = int(sub)
+                pred = int(pred)
+            if sub in unique_properties:
+                if pred in labeling_properties:
+                    labeled[sub] = []
         return [len(unique_properties), len(labeled)]
 
     ## todo: Possibly needed to not do them at once because double the memory wasted
@@ -78,16 +85,19 @@ class Completeness:
         """
         unique_sub = {}
         labeled = {}
-        with open(self.file) as infile:
-            for line in infile:
-                sub = line.split(self.seperator)[0].strip()
-                pred = line.split(self.seperator)[1].strip()
-                if self.encodeData:
-                    sub = int(sub)
-                    pred = int(pred)
-                unique_sub[sub] = []
-                if pred in labeling_properties:
-                    labeled[sub] = []
+        if self.file.endswith('.gz'):
+            infile = gzip.open(self.file)
+        else:
+            infile = open(self.file)
+        for line in infile:
+            sub = line.split(self.seperator)[0].strip()
+            pred = line.split(self.seperator)[1].strip()
+            if self.encodeData:
+                sub = int(sub)
+                pred = int(pred)
+            unique_sub[sub] = []
+            if pred in labeling_properties:
+                labeled[sub] = []
         return [len(unique_sub), len(labeled)]
 
 
@@ -139,47 +149,56 @@ class EfficientAccessibility:
 
     def getGraphs(self):
         graphs = {}
-        with open(self.file) as infile:
-            for line in infile:
-                graph = line.split(self.seperator)[-1].strip()
-                if self.encodeData:
-                    graph = int(graph)
-                graphs[graph] = []
+        if self.file.endswith('.gz'):
+            infile = gzip.open(self.file)
+        else:
+            infile = open(self.file)
+        for line in infile:
+            graph = line.split(self.seperator)[-1].strip()
+            if self.encodeData:
+                graph = int(graph)
+            graphs[graph] = []
         return graphs
 
     def getUniquePerGraph(self):
         graphs = {}
-        with open(self.file) as infile:
-            for line in infile:
-                graph = line.split(self.seperator)[-1].strip()
-                subject = line.split(self.seperator)[0].strip()
-                if self.encodeData:
-                    graph = int(graph)
-                    subject = int(subject)
-                if graph in graphs:
-                    if subject not in graphs[graph]:
-                        graphs[graph].append(subject)
-                else:
-                    graphs[graph] = [subject]
+        if self.file.endswith('.gz'):
+            infile = gzip.open(self.file)
+        else:
+            infile = open(self.file)
+        for line in infile:
+            graph = line.split(self.seperator)[-1].strip()
+            subject = line.split(self.seperator)[0].strip()
+            if self.encodeData:
+                graph = int(graph)
+                subject = int(subject)
+            if graph in graphs:
+                if subject not in graphs[graph]:
+                    graphs[graph].append(subject)
+            else:
+                graphs[graph] = [subject]
         return graphs
 
     def getLabeledinGraph(self, graphs, labeling_properties):
         labeled = {}
         for graph, _ in graphs.iteritems():
             tmp = []
-            with open(self.file) as infile:
-                for line in infile:
-                    trip = line.split(self.seperator)
-                    sub = trip[0].strip()
-                    prop = trip[1].strip()
-                    g = trip[-1].strip()
-                    if self.encodeData:
-                        sub = int(sub)
-                        prop = int(prop)
-                        g = int(g)
-                    if graph == g:
-                        if prop in labeling_properties:
-                            tmp.append(sub)
+            if self.file.endswith('.gz'):
+                infile = gzip.open(self.file)
+            else:
+                infile = open(self.file)
+            for line in infile:
+                trip = line.split(self.seperator)
+                sub = trip[0].strip()
+                prop = trip[1].strip()
+                g = trip[-1].strip()
+                if self.encodeData:
+                    sub = int(sub)
+                    prop = int(prop)
+                    g = int(g)
+                if graph == g:
+                    if prop in labeling_properties:
+                        tmp.append(sub)
             labeled[graph] = len(tmp)
         return labeled
 
@@ -234,21 +253,24 @@ class Unambiguity:
         subjects = set()
         counter_ambig = 0
         properties = self.getLabelingProperties()
-        with open(self.file) as infile:
-            for line in infile:
-                tmp = line.split(self.seperator)
-                sub = tmp[0].strip()
-                pred = tmp[1].strip()
-                if self.encodeData:
-                    sub = int(sub)
-                    pred = int(pred)
-                if len(tmp) < 2:
-                    continue
-                if pred in properties:
-                    if sub in subjects:
-                        counter_ambig += 1
-                    else:
-                        subjects.add(sub)
+        if self.file.endswith('.gz'):
+            infile = gzip.open(self.file)
+        else:
+            infile = open(self.file)
+        for line in infile:
+            tmp = line.split(self.seperator)
+            sub = tmp[0].strip()
+            pred = tmp[1].strip()
+            if self.encodeData:
+                sub = int(sub)
+                pred = int(pred)
+            if len(tmp) < 2:
+                continue
+            if pred in properties:
+                if sub in subjects:
+                    counter_ambig += 1
+                else:
+                    subjects.add(sub)
         return counter_ambig
 
     def run(self):
@@ -274,18 +296,21 @@ class Multilinguality:
         :return: dict with language and how often they occur
         """
         langs = {}
-        with open(self.infile) as infile:
-            for line in infile:
-                if '@' in line:
-                    line = line.replace('.', '').strip()
-                    value = line.split(self.seperator)[-1]
-                    if '@' in value:
-                        lang = value.split('@')[1].strip()
-                        if '"' not in lang:
-                            if lang in langs:
-                                langs[lang] += 1
-                            else:
-                                langs[lang] = 0
+        if self.infile.endswith('.gz'):
+            infile = gzip.open(self.infile)
+        else:
+            infile = open(self.infile)
+        for line in infile:
+            if '@' in line:
+                line = line.replace('.', '').strip()
+                value = line.split(self.seperator)[-1]
+                if '@' in value:
+                    lang = value.split('@')[1].strip()
+                    if '"' not in lang:
+                        if lang in langs:
+                            langs[lang] += 1
+                        else:
+                            langs[lang] = 0
         return langs
 
     def run(self):
@@ -311,22 +336,25 @@ class MonolingualIsland:
 
     def getData(self):
         data = {}
-        with open(self.infile) as infile:
-            for line in infile:
-                if '@' in line:
-                    line = line.replace('.', '').strip()
-                    value = line.split(self.seperator)[-1]
-                    subject = line.split(self.seperator)[0]
-                    if self.encodeData:
-                        value = int(value)
-                        subject = int(subject)
-                    if '@' in value:
-                        lang = value.split('@')[1].strip()
-                        if '"' not in lang:
-                            if lang not in data:
-                                data[subject] = [lang]
-                            else:
-                                data[subject].append(lang)
+        if self.infile.endswith('.gz'):
+            infile = gzip.open(self.infile)
+        else:
+            infile = open(self.infile)
+        for line in infile:
+            if '@' in line:
+                line = line.replace('.', '').strip()
+                value = line.split(self.seperator)[-1]
+                subject = line.split(self.seperator)[0]
+                if self.encodeData:
+                    value = int(value)
+                    subject = int(subject)
+                if '@' in value:
+                    lang = value.split('@')[1].strip()
+                    if '"' not in lang:
+                        if lang not in data:
+                            data[subject] = [lang]
+                        else:
+                            data[subject].append(lang)
         return data
 
     def run(self):
@@ -377,37 +405,43 @@ class LabelAndUsage:
         :return: dict in the form {object: int(numberUsage)}
         """
         objects = {}
-        with open(self.infile) as infile:
-            for line in infile:
-                tmp = line.split(self.seperator)
-                if len(tmp) == 3:
-                    object = tmp[-1]
-                else:
-                    object = tmp[-2]
-                if self.encodeData:
-                    object = int(object)
-                if not self.encodeData:
-                    if 'http' not in object:
-                        continue
-                if object in objects:
-                    objects[object] += 1
-                else:
-                    objects[object] = 0
+        if self.infile.endswith('.gz'):
+            infile = gzip.open(self.infile)
+        else:
+            infile = open(self.infile)
+        for line in infile:
+            tmp = line.split(self.seperator)
+            if self.encodeData:
+                object = tmp[-2]
+            else:
+                object = tmp[-1]
+            if self.encodeData:
+                object = int(object)
+            if not self.encodeData:
+                if 'http' not in object:
+                    continue
+            if object in objects:
+                objects[object] += 1
+            else:
+                objects[object] = 0
         return objects
 
     def getlabeledobjects(self, labelingproperties, objects):
         labeledobjects = []
-        with open(self.infile) as infile:
-            for line in infile:
-                tmp = line.split(self.seperator)
-                subject = tmp[0]
-                prop = tmp[1]
-                if self.encodeData:
-                    subject = int(subject)
-                    prop = int(prop)
-                if subject in objects:
-                    if prop in labelingproperties:
-                        labeledobjects.append(subject)
+        if self.infile.endswith('.gz'):
+            infile = gzip.open(self.infile)
+        else:
+            infile = open(self.infile)
+        for line in infile:
+            tmp = line.split(self.seperator)
+            subject = tmp[0]
+            prop = tmp[1]
+            if self.encodeData:
+                subject = int(subject)
+                prop = int(prop)
+            if subject in objects:
+                if prop in labelingproperties:
+                    labeledobjects.append(subject)
         return labeledobjects
 
     def analyzeLabeledObjects(self, objects, labeledObjects):
