@@ -16,10 +16,10 @@ class ConvertDataWikidata():
             return None
         sub = sub.replace('http://www.wikidata.org/entity/', '')
         pred = triple[1]
-        if len(triple) == 3 and 'http://www.wikidata.org/entity/' in triple[2]:
+        if 'http://www.wikidata.org/entity/' in triple[2]:
             obj = triple[2].replace('http://www.wikidata.org/entity/', '')
         else:
-            obj = " ".join(triple[2:])
+            obj = " ".join(triple[2:-1])
         return sub + '\t' + pred + '\t' + obj + '\n'
 
     def run(self):
