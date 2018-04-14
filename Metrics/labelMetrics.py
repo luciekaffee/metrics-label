@@ -251,7 +251,7 @@ class Unambiguity:
 
     def getSubjects(self):
         subjects = set()
-        counter_ambig = 0
+        ambig = []
         properties = self.getLabelingProperties()
         if self.file.endswith('.gz'):
             infile = gzip.open(self.file)
@@ -268,10 +268,11 @@ class Unambiguity:
                 continue
             if pred in properties:
                 if sub in subjects:
-                    counter_ambig += 1
+                    if sub not in ambig:
+                        ambig.append(sub)
                 else:
                     subjects.add(sub)
-        return counter_ambig
+        return len(ambig)
 
     def run(self):
         number_ambig = self.getSubjects()
@@ -360,7 +361,7 @@ class MonolingualIsland:
     def run(self):
         data = self.getData
         with open(self.outfile, 'w') as out:
-            for k, v in langs.iteritems():
+            for k, v in data.iteritems():
                 out.write(k + '\t' + str(v) + '\n')
 
 class LabelAndUsage:
