@@ -352,14 +352,22 @@ class MonolingualIsland:
                 if '@' in value:
                     lang = value.split('@')[1].strip()
                     if '"' not in lang:
-                        if lang not in data:
+                        if subject not in data:
                             data[subject] = [lang]
                         else:
                             data[subject].append(lang)
         return data
 
+    def getMoreThanTwo(self, data):
+        counter = 0
+        for k, v in data.iteritems():
+            if v >= 2:
+                counter += 1
+        return counter
+
     def run(self):
-        data = self.getData
+        data = self.getData()
+        print 'entities in more than two languages: ' + str(self.getMoreThanTwo(data))
         with open(self.outfile, 'w') as out:
             for k, v in data.iteritems():
                 out.write(k + '\t' + str(v) + '\n')
@@ -412,19 +420,17 @@ class LabelAndUsage:
             infile = open(self.infile)
         for line in infile:
             tmp = line.split(self.seperator)
-            if self.encodeData:
-                object = tmp[-2]
-            else:
-                object = tmp[-1]
+            object = tmp[2].strip()
             if self.encodeData:
                 object = int(object)
+
             if not self.encodeData:
-                if 'http' not in object:
+                if 'http' not in object or not object.startswith('<'):
                     continue
             if object in objects:
                 objects[object] += 1
             else:
-                objects[object] = 0
+                objects[object] = 1
         return objects
 
     def getlabeledobjects(self, labelingproperties, objects):
@@ -435,8 +441,8 @@ class LabelAndUsage:
             infile = open(self.infile)
         for line in infile:
             tmp = line.split(self.seperator)
-            subject = tmp[0]
-            prop = tmp[1]
+            subject = tmp[0].strip()
+            prop = tmp[1].strip()
             if self.encodeData:
                 subject = int(subject)
                 prop = int(prop)
@@ -459,6 +465,8 @@ class LabelAndUsage:
                 counter_labeled.append(num)
             else:
                 counter_unlabeled.append(num)
+
+        print 'total average usage: ' + str(numpy.mean(objects.values()))
         print "average labeled usage: " + str(numpy.mean(counter_labeled))
         print 'average unlabeled usage: ' + str(numpy.mean(counter_unlabeled))
 

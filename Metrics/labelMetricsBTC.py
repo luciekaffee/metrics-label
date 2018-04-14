@@ -23,7 +23,7 @@ class BTC14:
                     else:
                         langs[lang] = 0
                     if lang not in monoling:
-                        monoling[subject] = [lang]M
+                        monoling[subject] = [lang]
                     else:
                         monoling[subject].append(lang)
         return [langs, monoling]
