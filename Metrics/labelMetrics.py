@@ -251,7 +251,7 @@ class Unambiguity:
 
     def getSubjects(self):
         subjects = set()
-        ambig = []
+        ambig = set()
         properties = self.getLabelingProperties()
         if self.file.endswith('.gz'):
             infile = gzip.open(self.file)
@@ -269,7 +269,7 @@ class Unambiguity:
             if pred in properties:
                 if sub in subjects:
                     if sub not in ambig:
-                        ambig.append(sub)
+                        ambig.add(sub)
                 else:
                     subjects.add(sub)
         return len(ambig)
