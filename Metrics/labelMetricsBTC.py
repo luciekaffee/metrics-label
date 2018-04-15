@@ -17,11 +17,11 @@ class BTC14:
             subject = line.split(' ')[0]
             if '@' in value:
                 lang = value.split('@')[1].strip()
-                if '"' not in lang and not lang.endswith('>'):
+                if '"' not in lang and not lang.endswith('>') and len(lang) < 5:
                     if lang in langs:
                         langs[lang] += 1
                     else:
-                        langs[lang] = 0
+                        langs[lang] = 1
                     if lang not in monoling:
                         monoling[subject] = [lang]
                     else:
@@ -45,8 +45,8 @@ class BTC14:
                         langs = data[0]
                         monoling = data[1]
 
-        with open(self.monolingoutfile, 'w') as outmono:
-            with open(self.langsoutfile, 'w') as out:
+        with gzip.open(self.monolingoutfile, 'wb') as outmono:
+            with gzip.open(self.langsoutfile, 'wb') as out:
                 for k, v in langs.iteritems():
                     out.write(k + '\t' + str(v) + '\n')
                 for k, v in monoling.iteritems():
