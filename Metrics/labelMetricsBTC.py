@@ -23,9 +23,9 @@ class BTC14:
                     else:
                         langs[lang] = 1
                     if subject not in monoling:
-                        monoling[subject] = [lang]
+                        monoling[subject] = set(lang)
                     else:
-                        monoling[subject].append(lang)
+                        monoling[subject].add(lang)
         return [langs, monoling]
 
     def run(self):

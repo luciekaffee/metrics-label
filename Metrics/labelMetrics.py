@@ -353,9 +353,9 @@ class MonolingualIsland:
                     lang = value.split('@')[1].strip()
                     if '"' not in lang:
                         if subject not in data:
-                            data[subject] = [lang]
+                            data[subject] = set(lang)
                         else:
-                            data[subject].append(lang)
+                            data[subject].add(lang)
         return data
 
     def getMoreThanTwo(self, data):
