@@ -259,13 +259,13 @@ class Unambiguity:
             infile = open(self.file)
         for line in infile:
             tmp = line.split(self.seperator)
+            if len(tmp) < 2:
+                continue
             sub = tmp[0].strip()
             pred = tmp[1].strip()
             if self.encodeData:
                 sub = int(sub)
                 pred = int(pred)
-            if len(tmp) < 2:
-                continue
             if pred in properties:
                 if sub in subjects:
                     if sub not in ambig:
@@ -474,9 +474,13 @@ class LabelAndUsage:
 
     def run(self):
         labelingProperties = self.getlabelingproperties()
+        print 'LabelUsage: Got Properties'
         objects = self.getobjects()
+        print 'LabelUsage: Got Objects'
         labeledObjects = self.getlabeledobjects(labelingProperties, objects)
+        print 'LabelUsage: Got Labeled Objects'
         self.analyzeLabeledObjects(objects, labeledObjects)
+        print 'LabelUsage: Finished'
         #print objects
         #print labeledObjects
         # plot the number used that have a label vs no label

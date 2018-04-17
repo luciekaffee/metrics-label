@@ -44,17 +44,17 @@ class BTC14:
                         data = self.getlanguages(line, langs, monoling)
                         langs = data[0]
                         monoling = data[1]
+        print 'all files processed'
 
         with gzip.open(self.monolingoutfile, 'wb') as outmono:
             with gzip.open(self.langsoutfile, 'wb') as out:
+                print 'write to files'
                 for k, v in langs.iteritems():
                     out.write(k + '\t' + str(v) + '\n')
+                print 'finished language file'
                 for k, v in monoling.iteritems():
                     outmono.write(k + '\t' + str(v) + '\n')
-                    for k, v in langs.iteritems():
-                        out.write(k + '\t' + str(v) + '\n')
-                    for k, v in monoling.iteritems():
-                        outmono.write(k + '\t' + str(v) + '\n')
+                print 'finished monoling file'
 
 class BTC10:
     def __init__(self, directory, langsoutfile):

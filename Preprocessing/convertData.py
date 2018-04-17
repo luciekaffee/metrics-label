@@ -59,7 +59,7 @@ class ConvertData():
 
     #todo: out needs to be compressed file, too
     def run_compressed(self):
-        with open(self.outfile, 'w') as out:
+        with gzip.open(self.outfile, 'w') as out:
             for filename in os.listdir(self.directory):
                 if filename.endswith(".gz") and filename.startswith('btc'):
                     print filename
