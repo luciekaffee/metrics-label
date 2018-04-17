@@ -420,6 +420,8 @@ class LabelAndUsage:
             infile = open(self.infile)
         for line in infile:
             tmp = line.split(self.seperator)
+            if len(tmp) < 3:
+                continue
             object = tmp[2].strip()
             if self.encodeData:
                 object = int(object)
@@ -434,7 +436,7 @@ class LabelAndUsage:
         return objects
 
     def getlabeledobjects(self, labelingproperties, objects):
-        labeledobjects = []
+        labeledobjects = set()
         if self.infile.endswith('.gz'):
             infile = gzip.open(self.infile)
         else:
@@ -448,7 +450,7 @@ class LabelAndUsage:
                 prop = int(prop)
             if subject in objects:
                 if prop in labelingproperties:
-                    labeledobjects.append(subject)
+                    labeledobjects.add(subject)
         return labeledobjects
 
     def analyzeLabeledObjects(self, objects, labeledObjects):
