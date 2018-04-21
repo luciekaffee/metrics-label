@@ -18,14 +18,14 @@ class BTC14:
             if '@' in value:
                 lang = value.split('@')[1].strip()
                 if '"' not in lang and not lang.endswith('>') and len(lang) < 5:
-                    if lang in langs:
-                        langs[lang] += 1
-                    else:
-                        langs[lang] = 1
+                    #if lang in langs:
+                    #    langs[lang] += 1
+                    #else:
+                    #    langs[lang] = 1
                     if subject not in monoling:
-                        monoling[subject] = set(lang)
+                        monoling[subject] = [lang]
                     else:
-                        monoling[subject].add(lang)
+                        monoling[subject].append(lang)
         return [langs, monoling]
 
     def run(self):
@@ -49,11 +49,11 @@ class BTC14:
         with gzip.open(self.monolingoutfile, 'wb') as outmono:
             with gzip.open(self.langsoutfile, 'wb') as out:
                 print 'write to files'
-                for k, v in langs.iteritems():
-                    out.write(k + '\t' + str(v) + '\n')
-                print 'finished language file'
+                #for k, v in langs.iteritems():
+                #    out.write(k + '\t' + str(v) + '\n')
+                #print 'finished language file'
                 for k, v in monoling.iteritems():
-                    outmono.write(k + '\t' + str(v) + '\n')
+                    outmono.write(k + '\t' + str(set(v)) + '\n')
                 print 'finished monoling file'
 
 class BTC10:
@@ -87,7 +87,9 @@ class BTC10:
                     for line in infile:
                         monoling = self.getlanguages(line, monoling)
 
-        with open(self.langsoutfile, 'w') as out:
-            for k, v in langs.iteritems():
+        print 'usage: finished getting data'
+
+        with gzip.open(self.langsoutfile, 'w') as out:
+            for k, v in monoling.iteritems():
                 #print k + '\t' + str(v) + '\n'
-                out.write(k + '\t' + str(v) + '\n')
+                out.write(k + '\t' + str(set(v)) + '\n')

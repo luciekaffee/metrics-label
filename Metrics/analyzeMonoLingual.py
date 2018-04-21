@@ -3,6 +3,7 @@ import gzip
 class AnalyzeMonoLingualIslands():
     def __init__(self, infile, outfile):
         self.infile = infile
+        self.outfile = outfile
 
     def getData(self):
         data = {}
@@ -24,4 +25,4 @@ class AnalyzeMonoLingualIslands():
         data = self.getData()
         with open(self.outfile, 'w') as out:
             for k,v in data.iteritems():
-                out.write(k + '\t' + v)
+                out.write(str(k) + '\t' + str(v) + '\n')
