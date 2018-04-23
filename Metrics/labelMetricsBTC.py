@@ -72,7 +72,7 @@ class BTC10:
             if '@' in value:
                 lang = value.split('@')[1].strip()
                 if '"' not in lang:
-                    if lang not in monoling:
+                    if subject not in monoling:
                         monoling[subject] = [lang]
                     else:
                         monoling[subject].append(lang)
