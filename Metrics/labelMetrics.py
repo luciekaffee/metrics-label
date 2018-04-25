@@ -353,9 +353,9 @@ class MonolingualIsland:
                     lang = value.split('@')[1].strip()
                     if '"' not in lang:
                         if subject not in data:
-                            data[subject] = set(lang)
+                            data[subject] = [lang]
                         else:
-                            data[subject].add(lang)
+                            data[subject].append(lang)
         return data
 
     def getMoreThanTwo(self, data):
@@ -367,6 +367,7 @@ class MonolingualIsland:
 
     def run(self):
         data = self.getData()
+        print 'got data'
         print 'entities in more than two languages: ' + str(self.getMoreThanTwo(data))
         with open(self.outfile, 'w') as out:
             for k, v in data.iteritems():
@@ -436,7 +437,7 @@ class LabelAndUsage:
         return objects
 
     def getlabeledobjects(self, labelingproperties, objects):
-        labeledobjects = set()
+        labeledobjects = {}
         if self.infile.endswith('.gz'):
             infile = gzip.open(self.infile)
         else:
@@ -450,7 +451,10 @@ class LabelAndUsage:
                 prop = int(prop)
             if subject in objects:
                 if prop in labelingproperties:
-                    labeledobjects.add(subject)
+                    if subject in labeledobjects:
+                        labeledobjects[subject] += 1
+                    else:
+                        labeledobjects[subject] = 1
         return labeledobjects
 
     def analyzeLabeledObjects(self, objects, labeledObjects):
@@ -472,6 +476,19 @@ class LabelAndUsage:
         print "average labeled usage: " + str(numpy.mean(counter_labeled))
         print 'average unlabeled usage: ' + str(numpy.mean(counter_unlabeled))
 
+
+    def run_only_labeled(self):
+        labelingProperties = self.getlabelingproperties()
+        print 'LabelUsage: Got Properties'
+        objects = self.getobjects()
+        print 'LabelUsage: Got Objects'
+        labeledObjects = self.getlabeledobjects(labelingProperties, objects)
+        for obj, num in labeledObjects:
+            with gzip.open(self.outfile, 'wb') as out:
+                if obj not in labeledObjects:
+                    continue
+                out.write(obj + '\t' + num + labeledObjects[obj])
+        print 'wrote to file'
 
 
     def run(self):
