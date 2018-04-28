@@ -335,6 +335,16 @@ class MonolingualIsland:
         self.encodeData = encodeData
         self.seperator = seperator
 
+    def encode(self, s):
+        """ Helper function to encode strings to SHA256 integer
+        :param s: string to encode
+        :return: int of encoded string
+        """
+        if self.encodeData == True:
+            return int(hashlib.sha256(s.encode('utf-8')).hexdigest(), 16)
+        else:
+            return s
+
     def getData(self):
         data = {}
         if self.infile.endswith('.gz'):
@@ -346,6 +356,7 @@ class MonolingualIsland:
                 line = line.replace('.', '').strip()
                 value = line.split(self.seperator)[-1]
                 subject = line.split(self.seperator)[0]
+                subject = self.encode(subject)
                 if self.encodeData:
                     value = int(value)
                     subject = int(subject)

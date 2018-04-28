@@ -1,5 +1,6 @@
 import gzip
 import os
+import json
 
 class BTC14:
     def __init__(self, directory, langsoutfile, monolingoutfile):
@@ -93,3 +94,33 @@ class BTC10:
             for k, v in monoling.iteritems():
                 #print k + '\t' + str(v) + '\n'
                 out.write(k + '\t' + str(set(v)) + '\n')
+
+class Wikidata:
+    def __init__(self, infile, outfile):
+        self.infile = infile
+        self.outfile = outfile
+
+    def getLangs(self):
+        monoling = {}
+        infile = gzip.open(self.infile)
+        for line in infile:
+            try:
+                ent = json.loads(line.rstrip('\n,'))
+            except (KeyError, ValueError) as e:
+                print(e)
+                continue
+            langs = len(ent['labels'].keys())
+            if langs in monoling:
+                monoling[langs] += 1
+            else:
+                monoling[langs] = 1
+        return monoling
+
+    def run(self):
+        monoling = self.getLangs()
+        with open(self.outfile, 'w') as outfile:
+            for k,v in monoling:
+                outfile.write(str(k) + '\t' + str(v) + '\n')
+
+
+
