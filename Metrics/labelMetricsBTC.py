@@ -95,7 +95,7 @@ class BTC10:
                 #print k + '\t' + str(v) + '\n'
                 out.write(k + '\t' + str(set(v)) + '\n')
 
-class Wikidata:
+class Wikidata_with_JSON:
     def __init__(self, infile, outfile):
         self.infile = infile
         self.outfile = outfile
@@ -119,7 +119,7 @@ class Wikidata:
     def run(self):
         monoling = self.getLangs()
         with open(self.outfile, 'w') as outfile:
-            for k,v in monoling:
+            for k,v in monoling.iteritems():
                 outfile.write(str(k) + '\t' + str(v) + '\n')
 
 
