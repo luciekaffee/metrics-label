@@ -167,9 +167,6 @@ class RDFMTAdder():
                 for mtclass, results in data.iteritems():
                     content = self.create_rdfmt_content(results)
                     rdfmt[kgname][mtclass] = content
-                    print content
-                    break
-                print rdfmt
                 self.create_file(kgname, rdfmt)
 
 
