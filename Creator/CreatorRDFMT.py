@@ -6,7 +6,7 @@ import tarfile
 class BasicRDFMTCreator():
 
     def create_file(self, kgname, rdfmt):
-        with open(kgname + '-basic' + '.json', 'w') as outfile:
+        with open('data/' + kgname + '-basic' + '.json', 'w') as outfile:
             json.dump(rdfmt, outfile)
 
     def run(self, directory):
@@ -35,7 +35,7 @@ class BasicRDFMTCreator():
                             else:
                                 rdfmt[kgname][mtclass] = {}
                                 rdfmt[kgname][mtclass][query] = content
-            self.create_file(kgname, rdfmt)
+            #self.create_file(kgname, rdfmt)
             all.append(rdfmt)
         return all
 
@@ -43,7 +43,7 @@ class BasicRDFMTCreator():
 class BasicRDFMTCleaner():
 
     def create_file(self, kgname, rdfmt):
-        with open(kgname + '-rdfmt-raw' + '.json', 'w') as outfile:
+        with open('data/' + kgname + '-rdfmt-raw' + '.json', 'w') as outfile:
             json.dump(rdfmt, outfile)
 
     def run(self, kgdata):
@@ -78,7 +78,7 @@ class BasicRDFMTCleaner():
                             rdfmt[kgname][mtclass][q] = r[0]['callret-0']
                         else:
                             rdfmt[kgname][mtclass][q] = r[0]['count']
-            self.create_file(kgname, rdfmt)
+            #self.create_file(kgname, rdfmt)
             allrdfmt.append(rdfmt)
         return allrdfmt
 
@@ -86,7 +86,7 @@ class BasicRDFMTCleaner():
 class RDFMTAdder():
 
     def create_file(self, kgname, rdfmt):
-        with open(kgname + '-rdfmt' + '.json', 'w') as outfile:
+        with open('data/' + kgname + '-rdfmt' + '.json', 'w') as outfile:
             json.dump(rdfmt, outfile)
 
     def create_rdfmt_content(self, data):
