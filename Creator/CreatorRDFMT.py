@@ -160,6 +160,7 @@ class RDFMTAdder():
 
 
     def run(self, kgdata):
+        results = {}
         for kg in kgdata:
             rdfmt = {}
             for kgname, data in kg.iteritems():
@@ -168,6 +169,9 @@ class RDFMTAdder():
                     content = self.create_rdfmt_content(results)
                     rdfmt[kgname][mtclass] = content
                 self.create_file(kgname, rdfmt)
+                results[kgname] = rdfmt
+        return results
+
 
 
 
