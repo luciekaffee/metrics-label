@@ -69,6 +69,8 @@ class BasicRDFMTCleaner():
                     for q, r in results.iteritems():
                         if not r:
                             rdfmt[kgname][mtclass][q] = []
+                        elif kgname == 'wikidata':
+                            rdfmt[kgname][mtclass][q] = r[0]
                         elif q == 'Q10':
                             tmp = {}
                             for x in r:
@@ -91,68 +93,74 @@ class RDFMTAdder():
 
     def create_rdfmt_content(self, data):
         content = {}
-        if data['Q1']:
+        if 'Q1' in data and data['Q1']:
             content['ds_size_triples'] = float(data['Q1'])
         else:
             content['ds_size_triples'] = []
-        if data['Q2']:
+        if 'Q2' in data and data['Q2']:
             content['ds_subproperty_usage'] = float(data['Q2'])
         else:
             content['ds_subproperty_usage'] = []
-        if data['Q3'] and data['Q4']:
+        if 'Q3' in data and 'Q4' in data and data['Q3'] and data['Q4']:
             content['ds_class_labeling'] = float(data['Q3'])/float(data['Q4'])
         else:
             content['ds_class_labeling'] = []
-        if data['Q6'] and data['Q5']:
+        if 'Q6' in data and 'Q5' in data and data['Q6'] and data['Q5']:
             content['ds_property_labeling'] = float(data['Q6']) / float(data['Q5'])
         else:
             content['ds_property_labeling'] = []
-        if data['Q7']:
+        if 'Q7' in data and  data['Q7']:
             content['size_triples'] = float(data['Q7'])
         else:
             content['size_triples'] = []
-        if data['Q8']:
-            content['size_subjects'] = float(data['Q8'])
-        else:
-            content['size_subjects'] = []
-        if data['Q11']:
+        if 'Q11' in data and data['Q11']:
             content['number_languages'] = float(data['Q11'])
         else:
             content['number_languages'] = []
-        if data['Q9'] and data['Q8']:
-            content['subject_labeling'] = float(data['Q9'])/float(data['Q8'])
+
+        if 'Q8' in data and data['Q8'] and float(data['Q8']) <= 0:
+            return content
+
+        if 'Q8' in data and data['Q8']:
+            content['size_subjects'] = float(data['Q8'])
+        else:
+            content['size_subjects'] = []
+        if 'Q9' in data and 'Q8' in data and data['Q9'] and data['Q8']:
+                content['subject_labeling'] = float(data['Q9'])/float(data['Q8'])
         else:
             content['subject_labeling'] = []
-        if data['Q12'] and data['Q8']:
+        if 'Q12' in data and 'Q8' in data and data['Q12'] and data['Q8']:
             content['unambiguity'] = float(data['Q12'])/float(data['Q8'])
         else:
             content['unambiguity'] = []
 
         content['languages_share'] = {}
         lang_total = 0
-        if not data['Q10']:
+
+        if 'Q10' not in data or not data['Q10']:
             return content
+
         for lang, value in data['Q10'].iteritems():
             lang_total += float(value)
         for lang, value in data['Q10'].iteritems():
             content['languages_share'][lang] = float(value)/lang_total
-        if data['Q13'] and data['Q8']:
+        if 'Q13' in data and 'Q8' in data and data['Q13'] and data['Q8']:
             content['entities_1_lang'] = float(data['Q13'])/float(data['Q8'])
         else:
             content['entities_1_lang'] = []
-        if data['Q14'] and data['Q8']:
+        if 'Q14' in data and 'Q8' in data and data['Q14'] and data['Q8']:
             content['entities_2_5_lang'] = float(data['Q14'])/float(data['Q8'])
         else:
             content['entities_2_5_lang'] = []
-        if data['Q15'] and data['Q8']:
+        if 'Q15' in data and 'Q8' in data and data['Q15'] and data['Q8']:
             content['entities_6_10_lang'] = float(data['Q15']) / float(data['Q8'])
         else:
             content['entities_6_10_lang'] = []
-        if data['Q16'] and data['Q8']:
+        if 'Q16' in data and 'Q8' in data and data['Q16'] and data['Q8']:
             content['entities_11_50_lang'] = float(data['Q16']) / float(data['Q8'])
         else:
             content['entities_11_50_lang'] = []
-        if data['Q17'] and data['Q8']:
+        if 'Q17' in data and 'Q8' in data and data['Q17'] and data['Q8']:
             content['entities_50+_lang'] = float(data['Q17']) / float(data['Q8'])
         else:
             content['entities_50+_lang'] = 0
