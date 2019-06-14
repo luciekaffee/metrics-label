@@ -100,7 +100,14 @@ class AnswerCompletenessRanker:
             errors[kg] = mean_squared_error(gold_answers, e)
         return errors
 
-    def run(self, query_sets):
+    # Distance from ideal
+    def run_answers(self, query_sets):
+        results = []
+        for set in query_sets:
+            
+
+    # Run to return MSQE
+    def run_mse(self, query_sets):
         results = []
         for set in query_sets:
             errors = self.get_errors(set)
