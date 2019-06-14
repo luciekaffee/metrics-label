@@ -132,7 +132,7 @@ class RDFMTAdder():
         if 'Q12' in data and 'Q8' in data and data['Q12'] and data['Q8']:
             content['unambiguity'] = float(data['Q12'])/float(data['Q8'])
         else:
-            content['unambiguity'] = []
+            content['unambiguity'] = 1
 
         content['languages_share'] = {}
         lang_total = 0

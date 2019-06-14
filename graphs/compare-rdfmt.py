@@ -148,7 +148,7 @@ classes = json.load(open('../data/classes.json'))
 kgs = {'wikidata': wikidata_rdfmt, 'DBpedia': dbpedia_rdfmt, 'YAGO': yago_rdfmt, 'linkedmdb': linkedmdb_rdfmt, 'MusicBrainz': musicbrainz_rdfmt}
 
 # df = pd.DataFrame(writedata)
-# df.to_csv(writedata)
+# df.to_csv(file, encoding='utf-8')
 
 results = {}
 for q in query_ids:
@@ -174,5 +174,30 @@ for q in query_ids:
             results[q][kgname] = mts[0]
 
 
+total = {}
+for lang, data in results.iteritems():
+    total[lang] = {}
+    for kg, d in data.iteritems():
+    #print kg
+    total[lang][kg] = {}
+    for q, a in d.iteritems():
+        if lang not in questions[(int(q))]:
+            continue
+        total[lang][kg][questions[int(q)][lang]] = a
+
+
+# answers from QALD
+answers = {}
+for _, data in tmp.iteritems():
+        for d in data:
+            if type(d) is dict:
+                if int(d['id']) in qids:
+                    answers[int(d['id'])] = {}
+                    for q in  d['question']:
+                        if not 'language' in q or not 'string' in q:
+                            continue
+                        k = q['language']
+                        v = q['string']
+                        answers[int(d['id'])][k] = v
 
 

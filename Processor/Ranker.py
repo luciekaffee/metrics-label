@@ -7,10 +7,10 @@ import numpy as np
 
 class DomainCreator:
 
-    def __init__(self):
+    def __init__(self, languages):
         self.query_ids = json.load(open('data/query-ids.json'))
         self.classes = json.load(open('data/classes.json'))
-        self.languages = ['en', 'ar', 'es']
+        self.languages = languages
 
     def get_qids_from_classes(self, kg):
         qids = {}
@@ -88,7 +88,10 @@ class AnswerCompletenessRanker:
         for kg in self.kgs:
             kg_answers[kg] = []
             for qid, lang in qid_set.iteritems():
-                kg_answer = len(self.answers[lang][kg][str(qid)])
+                if not str(qid) in self.answers[lang][kg]:
+                    kg_answer = 0
+                else:
+                    kg_answer = len(self.answers[lang][kg][str(qid)])
                 #if kg_answer == 0:
 
                 kg_answers[kg].append(kg_answer)
@@ -101,7 +104,7 @@ class AnswerCompletenessRanker:
         results = []
         for set in query_sets:
             errors = self.get_errors(set)
-            result = sorted(errors.items(), key=operator.itemgetter(0))
+            result = sorted(errors.items(), key=operator.itemgetter(1))
             results.append(result)
         return results
 
@@ -110,74 +113,154 @@ class RDFMTRanker:
     def __init__(self, rdfmts):
         self.rdfmts = rdfmts
         self.query_ids = json.load(open('data/query-ids.json'))
-        self.classes = json.load(open('data/classes.json'))
+        classes = json.load(open('data/classes.json'))
+        self.classes = {k.lower(): v for k, v in classes.items()}
 
     def normalize(self, mts, metric):
         m = []
-        for qid, data in mts:
-            for kgname, d in data:
+        for qid, data in mts.iteritems():
+            for kgname, d in data.iteritems():
+                if d == 0 or not metric in d:
+                    continue
                 m.append(d[metric])
-        maxi = float(max(m))
-        for qid, data in mts:
-            for kgname, d in data:
+        if not m:
+            return mts
+        m_x = [0 if not x else x for x in m]
+        if not max(m_x):
+            return mts
+        maxi = float(max(m_x))
+        for qid, data in mts.iteritems():
+            for kgname, d in data.iteritems():
+                if not d or not metric in d:
+                    continue
+                if not d[metric]:
+                    d[metric] = 0
+                    continue
                 d[metric] = d[metric]/maxi
         return mts
 
-    def get_average_data(self, mts):
+    def get_average_data(self, mts, lang):
         res = {}
         result = {}
         for mt in mts:
             for k, v in mt.iteritems():
-                if k == 'languages_share' or not v:
-                    continue
-                if k in res:
-                    res[k].append(v)
+                if k == 'languages_share':
+                    if k in res:
+                        if not lang in v:
+                            res[k].append(0)
+                        else:
+                            res[k].append(v[lang])
+                    else:
+                        if not lang in v:
+                            res[k] = [0]
+                        else:
+                            res[k] = [v[lang]]
                 else:
-                    res[k] = [v]
+                    if k in res:
+                        if not v:
+                            res[k].append(0)
+                        else:
+                            res[k].append(v)
+                    else:
+                        if not v:
+                            res[k] = [0]
+                        else:
+                            res[k] = [v]
         for k, v in res.iteritems():
             result[k] = np.mean(v)
         return result
 
-    def get_rdfmts(self, set):
-        results = []
-        for qid in set:
+    def sum_domain(self, res):
+        result = {}
+        for id, kgs in res.iteritems():
+            for kgname, data in kgs.iteritems():
+                if not kgname in result:
+                    result[kgname] = {}
+                if not data:
+                    continue
+                for k,v in data.iteritems():
+                    if k in result[kgname]:
+                        result[kgname][k].append(v)
+                    else:
+                        result[kgname][k] = [v]
+
+        r = {}
+        for kgname, data in result.iteritems():
+            r[kgname] = {}
+            if not data:
+                continue
+            for k,v in data.iteritems():
+                r[kgname][k] = np.mean(v)
+        return r
+
+
+    def get_rdfmts(self, qset):
+        results = {}
+        for qid, lang in qset.iteritems():
             results[qid] = {}
-            for kgname, rdfmt in self.rdfmts:
+            for kgname, rdfmt in self.rdfmts.iteritems():
+                kgname = kgname.lower()
                 results[qid][kgname] = []
+                if not str(qid) in self.classes[kgname] or not self.classes[kgname][str(qid)]:
+                    results[qid][kgname] = 0
+                    continue
+                x = str(qid)
                 cls = set(self.classes[kgname][str(qid)])
                 mts = []
                 for c in cls:
-                    if kgname == 'YAGO':
+                    if kgname == 'yago':
                         c = c.replace('http://yago-knowledge.org/resource/', '')
                     elif 'http' not in c:
                         continue
                     if c not in rdfmt:
-                        # print kgname, cls
                         continue
+
                     mts.append(rdfmt[c])
-                if len(mts) > 1:
-                    results[qid][kgname] = self.get_average_data(mts)
-                elif len(mts) == 1:
-                    results[qid][kgname] = mts[0]
-        results = self.normalize(results, 'languages_share')
+
+                results[qid][kgname] = self.get_average_data(mts, lang)
+
+        results = self.normalize(results, 'size_subjects')
         results = self.normalize(results, 'size_triples')
+        results = self.normalize(results, 'number_languages')
+        results = self.normalize(results, 'ds_size_triples')
 
         return results
 
-    def get_metrics_results(self, set):
-        return self.get_rdfmts(set)
+    def get_scores(self, rdfmts_aggr, metrics):
+        result = {}
+        for kgname, data in rdfmts_aggr.iteritems():
+            result[kgname] = 0
+            for key, value in data.iteritems():
+                if key in metrics:
+                    result[kgname] += value
 
-    def run(self, query_sets, language='None'):
+        res = {}
+        for key, value in result.iteritems():
+            res[key] = value / len(metrics)
+        return  res
+
+
+
+
+    def run(self, query_sets):
         results = []
-        for set in query_sets:
-            print self.get_metrics_results(set)
-            #if language:
-            #    metrics = self.get_metrics_results(set)
-            #    result = sorted(metrics.items(), key=operator.itemgetter(0))
-            #    results.append(result)
-            #else:
-            #    metrics = self.get_metrics_results_multilingual(set)
-            #    result = sorted(metrics.items(), key=operator.itemgetter(0))
-            #    results.append(result)
+        metrics_mono = ['ds_size_triples', 'size_subjects', 'size_triples', 'languages_share', 'subject_labeling', 'ds_class_labeling', 'unambiguity']
+        metrics_multi = ['ds_size_triples', 'size_subjects', 'size_triples', 'languages_share',
+                         'subject_labeling', 'ds_class_labeling', 'unambiguity', 'number_languages',
+                         'entities_1_lang', 'entities_2_5_lang', 'entities_6_10_lang', 'entities_11_50_lang', 'entities_50+_lang']
+        for qset in query_sets:
+            scores = {}
+            rdfmts = self.get_rdfmts(qset)
+            rdfmts_aggr = self.sum_domain(rdfmts)
+
+            if len(set(qset.values())) == 1:
+                scores = self.get_scores(rdfmts_aggr, metrics_mono)
+            else:
+                print 'Multilingual ' + str(qset.values())
+                scores = self.get_scores(rdfmts_aggr, metrics_multi)
+
+            result = sorted(scores.items(), key=operator.itemgetter(1), reverse=True)
+            return result
+
 
 
