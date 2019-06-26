@@ -3,7 +3,7 @@ import json
 import itertools
 
 def send_query(query, endpoint):
-	query = 'PREFIX wdt: <http://www.wikidata.org/prop/direct/> ' + query
+    query = 'PREFIX wdt: <http://www.wikidata.org/prop/direct/> ' + query
     sparql = SPARQLWrapper(endpoint)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
@@ -34,11 +34,16 @@ queries = {}
 #queries['Q10'] = 'SELECT ?lt (COUNT(?o) AS ?c) {?o wdt:P31 <%s> . ?o rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?lt'
 #queries['Q11'] = 'SELECT (count(distinct ?lt) AS ?c) {?o wdt:P31 <%s> . ?o rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) }'
 #queries['Q12'] = 'SELECT (count(distinct ?s) AS ?c) { ?s wdt:P31 <%s> . ?subproperty rdfs:subPropertyOf rdfs:label . ?s rdfs:label ?title . ?s ?subproperty ?otherTitle . FILTER (?title != ?otherTitle) }'
-queries['Q13'] = 'SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING (count(distinct ?lt) = 1) }'
-queries['Q14'] = ' SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((?count > 1) && (?count < 6)) }'
-queries['Q15'] = 'SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((?count > 5) && (?count < 11)) }'
-queries['Q16'] = 'SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((?count > 10) && (?count < 51)) }'
-queries['Q17'] = 'SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING (?count > 50) }'
+#queries['Q13'] = 'SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING (count(distinct ?lt) = 1) }'
+#queries['Q14'] = ' SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((?count > 1) && (?count < 6)) }'
+#queries['Q15'] = 'SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((?count > 5) && (?count < 11)) }'
+#queries['Q16'] = 'SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((?count > 10) && (?count < 51)) }'
+#queries['Q17'] = 'SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING (?count > 50) }'
+queries['Q13'] = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING (count(distinct ?lt) = 1) }'
+queries['Q14'] = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((count(distinct ?lt) > 1) && (count(distinct ?lt) < 6)) }'
+queries['Q15'] = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((count(distinct ?lt) > 5)&& (count(distinct ?lt) < 11)) }'
+queries['Q16'] = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING ((count(distinct ?lt) > 10) && (count(distinct ?lt) < 51)) }'
+queries['Q17'] = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT (COUNT(?count) AS ?c) { SELECT ?s (count(distinct ?lt) as ?count) { ?s wdt:P31 <%s> . ?s rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?s HAVING (count(distinct ?lt) > 50) }'
 
 for key, q in queries.iteritems():
 	print '--------------> ' + key
@@ -68,7 +73,7 @@ for key, q in queries.iteritems():
 		#	SELECT ?lt (COUNT(?o) AS ?c) {?o wdt:P31 <%s> . ?o rdfs:label ?title . BIND (LCASE(lang(?title)) as ?lt) } GROUP BY ?lt
 		#"""
 		query = q.replace('%s', c)
-		result = send_query(query, 'https://query.wikidata.org/sparql')
+		result = send_query(query, 'http://node3.research.tib.eu:4010/sparql')
 		res = []
 		if not result:
 			with open('wikidata-results/' + key + '/' + c.replace('/', '_').replace(' ', '-') + '.json', 'w+') as outfile:

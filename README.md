@@ -30,6 +30,8 @@ The class *Ranker.py* creates a ranking of the datasets based on the queries of 
 
 The ranking can be run using **run-ranking.py**, which writes to the *results/* folder.
 
+The code to calculate Normalized Discounted Cumulative Gain is part of ranking-measures https://github.com/dkaterenchuk/ranking_measures 
+
 ## Graphs
 
 The *graphs* folder contains a jupyter notebook to create figures and analyze the RDFMTs overall.

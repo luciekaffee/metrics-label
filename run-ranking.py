@@ -27,7 +27,7 @@ gr = GoldStandardRanker(gold_en, gold_es, gold_hi)
 cl = CompareRankedLists()
 
 #domains = dc.run(288, 1, language='en', domains='Film')
-domains = dc.run(288, 1, language='es')
+domains = dc.run(288, 1, language='hi')
 
 #json.dump(domains, open('results/domains.json', 'w+'))
 
@@ -35,7 +35,7 @@ ranking_baseline_mse = br.run_mse(domains)
 ranking_baseline_cos = br.run_cos(domains)
 ranking_baseline_cos_num = br.run_cos_numbers(domains)
 
-json.dump(ranking_baseline, open('results/ranking-baselines.json', 'w+'))
+#json.dump(ranking_baseline, open('results/ranking-baselines.json', 'w+'))
 
 rdfmt_eval = mtr.run(domains)
 #print rdfmt_eval
@@ -61,4 +61,4 @@ print 'Normalized Discounted Cumulative Gain: ' + str(cl.run_nDCG(ranking_gold_s
 
 results = {'ranked_lists': {'MSE': ranking_baseline_mse, 'Cos': ranking_baseline_cos, 'CosN': ranking_baseline_cos_num, 'rdfmt': rdfmt_eval}, 'metrics_results': {'kendalltau':cl.run_kendalltau(ranking_gold_standard, ranked_lists), 'spearmanrho':cl.run_spearmanr(ranking_gold_standard, ranked_lists), 'rankedbiasoverlap':cl.run_RBO(ranking_gold_standard, ranked_lists), 'ndcg':cl.run_nDCG(ranking_gold_standard, ranked_lists)}}
 
-json.dumps('results/experiment-results.json', results)
+json.dumps(results, 'results/experiment-results.json')

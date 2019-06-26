@@ -157,6 +157,9 @@ class BaselineRanker:
                     kg_answers[kg].append(1)
         similarity = {}
         for kg, vec in kg_answers.iteritems():
+            if all(v == 0 for v in vec):
+                similarity[kg] = 0
+                continue
             similarity[kg] = distance.cosine(ideal, vec)
         return similarity
 
@@ -178,6 +181,9 @@ class BaselineRanker:
                     kg_answers[kg].append(1)
         similarity = {}
         for kg, vec in kg_answers.iteritems():
+            if all(v == 0 for v in vec):
+                similarity[kg] = 0
+                continue
             similarity[kg] = 1 - distance.cosine(gold_answers, vec)
         return similarity
 
@@ -194,7 +200,7 @@ class BaselineRanker:
     def run_cos(self, query_sets):
         results = []
         for qid_set in query_sets:
-            distance = self.get_cos_numbers(qid_set)
+            distance = self.get_cos(qid_set)
             result = sorted(distance.items(), key=operator.itemgetter(1), reverse=True)
             results.append(result)
         return results
@@ -346,8 +352,8 @@ class RDFMTRanker:
         results = []
         metrics_mono = ['ds_size_triples', 'size_subjects', 'size_triples', 'languages_share', 'subject_labeling', 'ds_class_labeling', 'unambiguity']
         metrics_multi = ['ds_size_triples', 'size_subjects', 'size_triples', 'languages_share',
-                         'subject_labeling', 'ds_class_labeling', 'unambiguity', 'number_languages',
-                         'entities_1_lang', 'entities_2_5_lang', 'entities_6_10_lang', 'entities_11_50_lang', 'entities_50+_lang']
+                         'subject_labeling', 'ds_class_labeling', 'unambiguity', 'number_languages', #'entities_1_lang',
+                         'entities_2_5_lang', 'entities_6_10_lang', 'entities_11_50_lang', 'entities_50+_lang']
         for qset in query_sets:
             rdfmts = self.get_rdfmts(qset)
             rdfmts_aggr = self.sum_domain(rdfmts, len(qset))
@@ -481,7 +487,7 @@ class CompareRankedLists:
                 #    continue
                 gs = self.prepare_ranked_list_ndcg(gold_standard[i])
                 l = self.prepare_ranked_list_ndcg(li[i])
-                result[measure] = measures.find_ndcg(gs, l)
+                result[measure] = measures.find_rankdcg(gs, l)
             results.append(result)
         return results
 

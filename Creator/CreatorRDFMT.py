@@ -26,6 +26,8 @@ class BasicRDFMTCreator():
                         if int(query.replace('Q', '')) < 7:
                             if 'all' in rdfmt[kgname]:
                                 rdfmt[kgname]['all'][query] = content
+                            elif query == 'Q6':
+                                rdfmt[kgname]['all'][query] = len(content[0])
                             else:
                                 rdfmt[kgname]['all'] = {}
                                 rdfmt[kgname]['all'][query] = content
@@ -64,7 +66,10 @@ class BasicRDFMTCleaner():
                         if not r:
                             rdfmt[kgname][mtclass][q] = []
                         else:
-                            rdfmt[kgname][mtclass][q] = r[0]['count']
+                            if 'count' in r[0]:
+                                rdfmt[kgname][mtclass][q] = r[0]['count']
+                            else:
+                                rdfmt[kgname][mtclass][q] = r[0]['callret-0']['value']
 
                     # clean each result for all queries for all RDF MT
                     for q, r in results.iteritems():
@@ -83,7 +88,7 @@ class BasicRDFMTCleaner():
                         #else:
                         #    rdfmt[kgname][mtclass][q] = r[0]['count']
                         else:
-                            rdfmt[kgname][mtclass][q] = int(r[0])
+                            rdfmt[kgname][mtclass][q] = r[0]
             #self.create_file(kgname, rdfmt)
             allrdfmt.append(rdfmt)
         return allrdfmt
