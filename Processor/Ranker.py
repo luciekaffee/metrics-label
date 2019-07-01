@@ -185,7 +185,29 @@ class BaselineRanker:
                 similarity[kg] = 0
                 continue
             similarity[kg] = 1 - distance.cosine(gold_answers, vec)
-        return similarity
+        return 
+
+    def normalize_NoCLC(self, metric, baseline_data):
+        maxi = []
+        result = {}
+        for kg, data in baseline_data.iteritems():
+            maxi.append(data[metric])
+        for kg, data in baseline_data.iteritems():
+            result[kg] = {}
+            for k,v in data:
+                if k == metric:
+                    result[kg][k] = v/max(maxi)
+                else:
+                    result[kg][k] = v
+
+
+    def get_NoCLC(self, qid_set):
+        kg_answers = {}
+        baseline_data = json.load(open('baselines/baseline_kgs_metrics.json'))
+        for kg, data in baseline_data.iteritems():
+            
+
+
 
     # Distance from ideal
     def run_cos_numbers(self, query_sets):
@@ -422,72 +444,6 @@ class GoldStandardRanker:
         for qset in query_sets:
             gold_scores = self.get_gold_ranking(qset)
             result = sorted(gold_scores.items(), key=operator.itemgetter(1), reverse=True)
-            results.append(result)
-        return results
-
-class CompareRankedLists:
-
-    def __init__(self):
-        self.rbo = RBO()
-        self.kgs = ['wikidata', 'dbpedia', 'yago', 'linkedmdb', 'musicbrainz']
-
-    def prepare_ranked_list(self, li):
-        return [x[0].lower() for x in li]
-
-    def prepare_ranked_list_ndcg(self, li):
-        res = []
-        di = dict((k.lower(), v) for k,v in dict(li).iteritems())
-        for kg in self.kgs:
-            res.append(di[kg])
-        return res
-
-
-
-    def run_kendalltau(self, gold_standard, ranked_lists):
-        results = []
-        for i in range(0, len(gold_standard)):
-            result = {}
-            for measure, li in ranked_lists.iteritems():
-                gs = self.prepare_ranked_list(gold_standard[i])
-                l = self.prepare_ranked_list(li[i])
-                result[measure] = kendalltau(gs, l)
-            results.append(result)
-        return results
-
-    def run_spearmanr(self, gold_standard, ranked_lists):
-        results = []
-        for i in range(0, len(gold_standard)):
-            result = {}
-            for measure, li in ranked_lists.iteritems():
-                gs = self.prepare_ranked_list(gold_standard[i])
-                l = self.prepare_ranked_list(li[i])
-                result[measure] = spearmanr(gs, l)
-            results.append(result)
-        return results
-
-
-    def run_RBO(self, gold_standard, ranked_lists):
-        results = []
-        for i in range(0, len(gold_standard)):
-            result = {}
-            for measure, li in ranked_lists.iteritems():
-                gs = self.prepare_ranked_list(gold_standard[i])
-                l = self.prepare_ranked_list(li[i])
-                result[measure] = self.rbo.score(gs, l)
-            results.append(result)
-        return results
-
-    # using ranking_measures from https://github.com/dkaterenchuk/ranking_measures
-    def run_nDCG(self, gold_standard, ranked_lists):
-        results = []
-        for i in range(0, len(gold_standard)):
-            result = {}
-            for measure, li in ranked_lists.iteritems():
-                #if measure == 'MSE':
-                #    continue
-                gs = self.prepare_ranked_list_ndcg(gold_standard[i])
-                l = self.prepare_ranked_list_ndcg(li[i])
-                result[measure] = measures.find_rankdcg(gs, l)
             results.append(result)
         return results
 
