@@ -56,11 +56,16 @@ ranked_lists = {'NoCLC': ranking_baseline_noCLC, 'MSE': ranking_baseline_mse, 'C
 #print 'gold standard: ' + str(ranking_gold_standard)
 #print 'NoCLC:' + str(ranking_baseline_noCLC) + '\nMSE: ' + str(ranking_baseline_mse) + '\nCos: ' + str(ranking_baseline_cos) + '\nCosN: ' + str(ranking_baseline_cos_num) + '\nrdfmt: ' + str(rdfmt_eval)
 
-print 'Kendall Tau: ' + str(cl.run_kendalltau(ranking_gold_standard, ranked_lists))
-print 'Spearman Rho: '+ str(cl.run_spearmanr(ranking_gold_standard, ranked_lists))
-print 'Rank Biased Overlap: ' + str(cl.run_RBO(ranking_gold_standard, ranked_lists))
-print 'Normalized Discounted Cumulative Gain: ' + str(cl.run_nDCG(ranking_gold_standard, ranked_lists))
+kt = cl.run_kendalltau(ranking_gold_standard, ranked_lists)
+sr = cl.run_spearmanr(ranking_gold_standard, ranked_lists)
+rbo = cl.run_RBO(ranking_gold_standard, ranked_lists)
+ndcg = cl.run_nDCG(ranking_gold_standard, ranked_lists)
 
-results = {'ranked_lists': {'NoCLC': ranking_baseline_noCLC, 'MSE': ranking_baseline_mse, 'Cos': ranking_baseline_cos, 'CosN': ranking_baseline_cos_num, 'rdfmt': rdfmt_eval}, 'metrics_results': {'kendalltau':cl.run_kendalltau(ranking_gold_standard, ranked_lists), 'spearmanrho':cl.run_spearmanr(ranking_gold_standard, ranked_lists), 'rankedbiasoverlap':cl.run_RBO(ranking_gold_standard, ranked_lists), 'ndcg':cl.run_nDCG(ranking_gold_standard, ranked_lists)}}
+print 'Kendall Tau: ' + str(kt)
+print 'Spearman Rho: '+ str(sr)
+print 'Rank Biased Overlap: ' + str(rbo)
+print 'Normalized Discounted Cumulative Gain: ' + str(ndcg)
 
-json.dumps(results, 'results/experiment-results.json')
+results = {'domains': domains, 'ranked_lists': {'NoCLC': ranking_baseline_noCLC, 'MSE': ranking_baseline_mse, 'Cos': ranking_baseline_cos, 'CosN': ranking_baseline_cos_num, 'rdfmt': rdfmt_eval}, 'metrics_results': {'kendalltau':kt, 'spearmanrho':sr, 'rankedbiasoverlap':rbo, 'ndcg':ndcg}}
+
+json.dump(results, open('results/experiment-results-multi.json', 'wb'))

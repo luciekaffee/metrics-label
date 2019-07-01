@@ -86,6 +86,9 @@ class BaselineRanker:
         self.query_ids = json.load(open('data/query-ids.json'))
         self.answers_numbers = self.get_answer_numbers()
 
+    def order_ties(self, kgs):
+        return sorted(sample.items(), key=operator.itemgetter(0))
+
     def get_answer_numbers(self):
         result = {}
         data = json.load(open('data/qald-9-train-multilingual.json'))
