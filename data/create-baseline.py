@@ -70,16 +70,16 @@ def create_baseline(baseline_data):
         else:
             content[kg]['unambiguity'] = 1
 
-        content[kg]['languages_share'] = {}
-        lang_total = 0
-
         if 'Q10' not in data or not data['Q10']:
-            return content[kg]
+            content[kg]['languages_share'] = 0
+            continue
 
-        for lang, value in data['Q10'][0].iteritems():
-            lang_total += float(value)
-        for lang, value in data['Q10'][0].iteritems():
-            content[kg]['languages_share'][lang] = float(value)/lang_total
+        content[kg]['languages_share'] = {}
+        lang_total = float(len(data['Q10']))
+
+        for lang in data['Q10']:
+            content[kg]['languages_share'][lang.keys()[0]] = float(lang.values()[0])/lang_total
+            
         if 'Q13' in data and 'Q8' in data and data['Q13'] and data['Q8']:
             content[kg]['entities_1_lang'] = float(data['Q13'])/float(data['Q8'])
         else:

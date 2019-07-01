@@ -11,6 +11,7 @@ from scipy.stats import spearmanr
 from ranking_measures import measures
 import math
 from RBO import *
+import itertools
 
 
 
@@ -185,7 +186,7 @@ class BaselineRanker:
                 similarity[kg] = 0
                 continue
             similarity[kg] = 1 - distance.cosine(gold_answers, vec)
-        return 
+        return similarity
 
     def normalize_NoCLC(self, metric, baseline_data):
         maxi = []
@@ -194,19 +195,54 @@ class BaselineRanker:
             maxi.append(data[metric])
         for kg, data in baseline_data.iteritems():
             result[kg] = {}
-            for k,v in data:
+            for k,v in data.iteritems():
                 if k == metric:
                     result[kg][k] = v/max(maxi)
                 else:
                     result[kg][k] = v
+        return result
 
 
     def get_NoCLC(self, qid_set):
         kg_answers = {}
-        baseline_data = json.load(open('baselines/baseline_kgs_metrics.json'))
+        baseline_data = json.load(open('data/baselines/baseline_kgs_metrics.json'))
+        languages = dict([(k, len(list(v))) for k, v in itertools.groupby(sorted(qid_set.values()))])
         for kg, data in baseline_data.iteritems():
-            
+            langs = data['languages_share'] 
+            if len(languages) ==  1 and languages.keys()[0] in langs:
+                baseline_data[kg]['languages_share'] = langs[languages.keys()[0]]
+            elif len(languages) ==  1 and languages.keys()[0] not in langs:
+                baseline_data[kg]['languages_share'] = 0
+            else:
+                counter = []
+                for l, v in languages.iteritems():
+                    if l in langs:
+                        counter.extend([langs[l]]*v)
+                    else:
+                        counter.extend([0]*v)
+                baseline_data[kg]['languages_share'] = np.mean(counter)
+            for k,v in data.iteritems():
+                if not v:
+                    baseline_data[kg][k] = 0
 
+
+        baseline_data = self.normalize_NoCLC('size_subjects', baseline_data)
+        baseline_data = self.normalize_NoCLC('size_triples' , baseline_data)
+        baseline_data = self.normalize_NoCLC('number_languages' , baseline_data)
+
+        for kg, data in baseline_data.iteritems():
+            kg_answers[kg] = np.mean(data.values())
+
+        return kg_answers
+
+
+    def run_NoCLC(self, query_sets):
+        results = []
+        for qid_set in query_sets:
+            score = self.get_NoCLC(qid_set)
+            result = sorted(score.items(), key=operator.itemgetter(1), reverse=True)
+            results.append(result)
+        return results
 
 
     # Distance from ideal
@@ -398,6 +434,7 @@ class GoldStandardRanker:
         self.gold_en = gold_en
         self.gold_es = gold_es
         self.gold_hi = gold_hi
+        self.kgs = ['wikidata', 'dbpedia', 'yago', 'linkedmdb', 'musicbrainz']
 
     def rename_kgs(self, kgs):
         result = []
@@ -436,7 +473,12 @@ class GoldStandardRanker:
             elif r:
                 results.append(r.strip())
 
-        return self.normalize(Counter(self.rename_kgs(results)), len(qset))
+        ranking = self.normalize(Counter(self.rename_kgs(results)), len(qset))
+        for kg in self.kgs:
+            if kg not in ranking.keys():
+                ranking[kg] = 0
+        return ranking
+
 
 
     def run(self, query_sets):
