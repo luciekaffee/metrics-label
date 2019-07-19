@@ -69,6 +69,6 @@ print 'Spearman Rho: '+ str(sr)
 print 'Rank Biased Overlap: ' + str(rbo)
 print 'Normalized Discounted Cumulative Gain: ' + str(ndcg)
 
-results = {'domains': domains, 'ranked_lists': {'NoCLC': ranking_baseline_noCLC, 'MSE': ranking_baseline_mse, 'Cos': ranking_baseline_cos, 'CosN': ranking_baseline_cos_num, 'rdfmt': rdfmt_eval}, 'metrics_results': {'kendalltau':kt, 'spearmanrho':sr, 'rankedbiasoverlap':rbo, 'ndcg':ndcg}}
+results = {'domains': domains, 'ranked_lists': {'Gold_Standard': ranking_gold_standard, 'NoCLC': ranking_baseline_noCLC, 'MSE': ranking_baseline_mse, 'Cos': ranking_baseline_cos, 'CosN': ranking_baseline_cos_num, 'CLC': rdfmt_eval}, 'metrics_results': {'kendalltau':kt, 'spearmanrho':sr, 'rankedbiasoverlap':rbo, 'ndcg':ndcg}}
 
 json.dump(results, open('results/domains/experiment-results-people.json', 'wb'))
