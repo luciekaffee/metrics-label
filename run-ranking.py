@@ -31,7 +31,8 @@ cl = CompareRankedLists()
 
 #domains = dc.run(288, 1, language='es', domains='Film')
 #domains = dc.run(30, 5)
-domains = ds.run('People')
+domain = 'Music'
+domains = ds.run(domain)
 
 #json.dump(domains, open('results/domains.json', 'w+'))
 
@@ -71,4 +72,4 @@ print 'Normalized Discounted Cumulative Gain: ' + str(ndcg)
 
 results = {'domains': domains, 'ranked_lists': {'Gold_Standard': ranking_gold_standard, 'NoCLC': ranking_baseline_noCLC, 'MSE': ranking_baseline_mse, 'Cos': ranking_baseline_cos, 'CosN': ranking_baseline_cos_num, 'CLC': rdfmt_eval}, 'metrics_results': {'kendalltau':kt, 'spearmanrho':sr, 'rankedbiasoverlap':rbo, 'ndcg':ndcg}}
 
-json.dump(results, open('results/domains/experiment-results-people.json', 'wb'))
+json.dump(results, open('results/domains/experiment-results-' + domain + '.json', 'wb'))
