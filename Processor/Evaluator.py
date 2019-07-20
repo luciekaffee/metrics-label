@@ -33,10 +33,12 @@ class CompareRankedLists:
     def run_kendalltau(self, gold_standard, ranked_lists):
         results = []
         for i in range(0, len(gold_standard)):
+            print i
             result = {}
             for measure, li in ranked_lists.iteritems():
                 gs = self.prepare_ranked_list(gold_standard[i])
                 l = self.prepare_ranked_list(li[i])
+                print measure, gs, l
                 result[measure] = kendalltau(gs, l)
             results.append(result)
         return results
@@ -56,10 +58,12 @@ class CompareRankedLists:
     def run_RBO(self, gold_standard, ranked_lists):
         results = []
         for i in range(0, len(gold_standard)):
+            print i
             result = {}
             for measure, li in ranked_lists.iteritems():
                 gs = self.prepare_ranked_list(gold_standard[i])
                 l = self.prepare_ranked_list(li[i])
+                print measure, gs, l, self.rbo.score(gs, l)
                 result[measure] = self.rbo.score(gs, l)
             results.append(result)
         return results
