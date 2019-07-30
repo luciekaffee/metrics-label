@@ -3,6 +3,47 @@ import json
 import itertools
 import os
 
+class EnpointPreparer():
+    def __init__(self):
+        self.endpoints = {}
+        self.endpoints['bio2rdf_wormbase'] = 'http://node4.research.tib.eu:1370/sparql'
+        self.endpoints['bio2rdf_taxonomy'] = 'http://node4.research.tib.eu:1371/sparql'
+        self.endpoints['bio2rdf_iproclass'] = 'http://node4.research.tib.eu:1372/sparql'
+        self.endpoints['bio2rdf_homologene'] = 'http://node4.research.tib.eu:1373/sparql'
+        self.endpoints['bio2rdf_goa'] = 'http://node4.research.tib.eu:1374/sparql'
+        self.endpoints['bio2rdf_genage'] = 'http://node4.research.tib.eu:1375/sparql'
+        self.endpoints['bio2rdf_dbsnp'] = 'http://node4.research.tib.eu:1376/sparql'
+        self.endpoints['bio2rdf_clinicaltrials'] = 'http://node4.research.tib.eu:1377/sparql'
+        self.endpoints['bio2rdf_bioportal'] = 'http://node4.research.tib.eu:1378/sparql'
+        self.endpoints['bio2rdf_kegg'] = 'http://node4.research.tib.eu:1379/sparql'
+        self.endpoints['bio2rdf_lsr'] = 'http://node4.research.tib.eu:1380/sparql'
+        self.endpoints['bio2rdf_mesh'] = 'http://node4.research.tib.eu:1381/sparql'
+        self.endpoints['bio2rdf_linkedspl'] = 'http://node4.research.tib.eu:1382/sparql'
+        self.endpoints['bio2rdf_irefindex'] = 'http://node4.research.tib.eu:1383/sparql'
+        self.endpoints['bio2rdf_interpro'] = 'http://node4.research.tib.eu:1384/sparql'
+        self.endpoints['bio2rdf_ncbigene'] = 'http://node4.research.tib.eu:1385/sparql'
+        self.endpoints['bio2rdf_omim'] = 'http://node4.research.tib.eu:1386/sparql'
+        self.endpoints['bio2rdf_pathwaycommons'] = 'http://node4.research.tib.eu:1387/sparql'
+        self.endpoints['bio2rdf_reactome'] = 'http://node4.research.tib.eu:1388/sparql'
+        self.endpoints['bio2rdf_sgd'] = 'http://node4.research.tib.eu:1389/sparql'
+        self.endpoints['bio2rdf_orphanet'] = 'http://node4.research.tib.eu:1390/sparql'
+        self.endpoints['bio2rdf_ndc'] = 'http://node4.research.tib.eu:1391/sparql'
+        self.endpoints['bio2rdf_mgi'] = 'http://node4.research.tib.eu:1392/sparql'
+        self.endpoints['bio2rdf_wikipathways'] = 'http://node4.research.tib.eu:1393/sparql'
+        self.endpoints['bio2rdf_sider'] = 'http://node4.research.tib.eu:1394/sparql'
+        self.endpoints['bio2rdf_sabiork'] = 'http://node4.research.tib.eu:1395/sparql'
+        self.endpoints['bio2rdf_pharmgkb'] = 'http://node4.research.tib.eu:1396/sparql'
+        self.endpoints['bio2rdf_hgnc'] = 'http://node4.research.tib.eu:1397/sparql'
+        self.endpoints['bio2rdf_gendr'] = 'http://node4.research.tib.eu:1398/sparql'
+        self.endpoints['bio2rdf_drugbank'] = 'http://node4.research.tib.eu:1399/sparql'
+        self.endpoints['bio2rdf_ctd'] = 'http://node4.research.tib.eu:1400/sparql'
+        self.endpoints['bio2rdf_chembl'] = 'http://node4.research.tib.eu:1401/sparql'
+        self.endpoints['bio2rdf_affymetrix'] = 'http://node4.research.tib.eu:1402/sparql'
+        self.endpoints['bio2rdf_biomodels'] = 'http://node4.research.tib.eu:1403/sparql'
+        self.endpoints['bio2rdf_pubmedr4'] = 'http://node4.research.tib.eu:1404/sparql'
+    def run(self):
+        return self.endpoints
+
 class BasicDataCollector():
     def __init__(self):
         self.queries = {}
@@ -43,4 +84,46 @@ class BasicDataCollector():
         for r in result["results"]["bindings"]:
             #if 'class' in r and 'value' in r['class']:
             classes.append(r['class']['value'])
+
+    def write_results(self, classes, kg, endpoint):
+        for key, q in self.queries.iteritems():
+            print '--------------> ' + key
+
+            if int(key.replace('Q', '')) < 7:
+                result = send_query(q, endpoint)
+                res = []
+                if not result:
+                    print q
+                    continue
+                for r in result["results"]["bindings"]:
+                    res.append(r)
+                filename = '/data/' + kg + '--' + key + '.json'
+                with open(filename, 'w+') as outfile:
+                    json.dump(res, outfile)
+                continue
+
+            for c in classes:
+                filename = 'data/' + kg + '--' + key + c.replace('/', '_').replace(' ', '-') + '.json'
+                query = q.replace('%s', c)
+                result = send_query(query, enpoint)
+                res = []
+                if not result:
+                    with open(filename, 'w+') as outfile:
+                        json.dump([], outfile)
+                    continue
+                for r in result["results"]["bindings"]:
+                    if not 'c' in r:
+                        continue
+                    elif 'lt' in r:
+                        res.append({r['lt']['value']: r['c']['value']})
+                    else:
+                        res.append(r['c']['value'])
+                with open(filename, 'w+') as outfile:
+                    json.dump(res, outfile)
+
+        def run(self, endpoints):
+            for kg, endpoint in endpoints.iteritems():
+                classes = self.get_classes(endpoint)
+                self.write_results(classes, kg, endpoint)
+
                         
