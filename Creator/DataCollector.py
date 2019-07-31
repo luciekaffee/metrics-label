@@ -80,36 +80,38 @@ class BasicDataCollector():
     def get_classes(self, endpoint):
         classes = []
         query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT DISTINCT ?class WHERE { ?s rdf:type ?class . }'
-        result = self.send_query(query)
+        result = self.send_query(query, endpoint)
         for r in result["results"]["bindings"]:
             #if 'class' in r and 'value' in r['class']:
             classes.append(r['class']['value'])
+        return classes
 
     def write_results(self, classes, kg, endpoint):
+        if not os.path.exists('data/raw/' + kg):
+            os.makedirs('data/raw/' + kg)
         for key, q in self.queries.iteritems():
             print '--------------> ' + key
 
             if int(key.replace('Q', '')) < 7:
-                result = send_query(q, endpoint)
+                result = self.send_query(q, endpoint)
                 res = []
                 if not result:
                     print q
                     continue
                 for r in result["results"]["bindings"]:
                     res.append(r)
-                filename = '/data/' + kg + '--' + key + '.json'
+                filename = 'data/raw/' + kg + '/' + key + '.json'
                 with open(filename, 'w+') as outfile:
                     json.dump(res, outfile)
                 continue
 
+            classdata = {}
             for c in classes:
-                filename = 'data/' + kg + '--' + key + c.replace('/', '_').replace(' ', '-') + '.json'
                 query = q.replace('%s', c)
-                result = send_query(query, enpoint)
+                result = self.send_query(query, endpoint)
                 res = []
                 if not result:
-                    with open(filename, 'w+') as outfile:
-                        json.dump([], outfile)
+                    classdata[c] = []
                     continue
                 for r in result["results"]["bindings"]:
                     if not 'c' in r:
@@ -118,12 +120,14 @@ class BasicDataCollector():
                         res.append({r['lt']['value']: r['c']['value']})
                     else:
                         res.append(r['c']['value'])
-                with open(filename, 'w+') as outfile:
-                    json.dump(res, outfile)
+                classdata[c] = res
+            filename = 'data/raw/' + kg + '/' + key + '.json'
+            with open(filename, 'w+') as outfile:
+                json.dump(classdata, outfile)
 
-        def run(self, endpoints):
-            for kg, endpoint in endpoints.iteritems():
-                classes = self.get_classes(endpoint)
-                self.write_results(classes, kg, endpoint)
+    def run(self, endpoints):
+        for kg, endpoint in endpoints.iteritems():
+            classes = self.get_classes(endpoint)
+            self.write_results(classes, kg, endpoint)
 
                         

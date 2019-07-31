@@ -2,103 +2,88 @@ import json
 import os
 import tarfile
 
+class RDFMTMerger():
+
+    def create_file(self, rdfmt):
+        with open('data/mergerresult.json', 'w') as outfile:
+            json.dump(rdfmt, outfile)
+
+    def create_Q10(self, qid, k, v, data):
+        val = {}
+        for t in v:
+            val[t.keys()[0]] = t.values()[0]
+        if k in data[qid]:
+            tmp_val = {}
+            for t in data[qid][k]:
+                tmp_val[t.keys()[0]] = t.values()[0]
+            return {key: tmp_val.get(key, 0) + val.get(key, 0) for key in set(tmp_val) | set(val)}
+        else:
+            return val
+
+    def run(self):
+        data = {}
+        for dirname in os.listdir('data/raw'):
+            for x in range(1, 18):
+                qid = 'Q' + x
+                with open('data/raw' + dirname + '/Q' + x + '.json') as infile:
+                    tmp = json.load(infile)
+                    if x < 7:
+                        if qid in data:
+                            data[qid] += tmp[0]['callret-0']['value']
+                        else:
+                           data[qid] = tmp[0]['callret-0']['value'] 
+                    elif x == 10:
+                        if qid not in data:
+                            data[qid] = {}
+                        for k, v in tmp:
+                            data[qid][k] = self.create_Q10(qid, k, v, data)
+
+                    else:
+                        if qid not in data:
+                            data[qid] = {}
+                        for k,v in tmp:
+                            if k in data[qid]:
+                                data[qid][k] += int(v[0])
+                            else:
+                                data[qid][k] = int(v[0])
+        self.create_file(data)
+        return data
+
+
+
+
 
 class BasicRDFMTCreator():
 
-    def create_file(self, kgname, rdfmt):
-        with open('data/' + kgname + '-basic' + '.json', 'w') as outfile:
+    def create_file(self, rdfmt):
+        with open('data/rdfmt-raw.json', 'w') as outfile:
             json.dump(rdfmt, outfile)
 
-    def run(self, directory):
-        all = []
-        for dirname in os.listdir(directory):
-            if 'tar.gz' in dirname:
-                continue
-            rdfmt = {}
-            kgname = dirname
-            rdfmt[kgname] = {}
-            for querydir in os.listdir(directory + '/' + dirname):
-                query = querydir
-                for f in os.listdir(directory + '/' + dirname + '/' + querydir):
-                    mtclass = f.replace('.json', '').replace('.txt', '').replace('_', '/').replace('-', ':')
-                    with open(directory + '/' + dirname + '/' + querydir + '/' + f) as infile:
-                        content = json.load(infile)
-                        if int(query.replace('Q', '')) < 7:
-                            if 'all' in rdfmt[kgname]:
-                                rdfmt[kgname]['all'][query] = content
-                            elif query == 'Q6':
-                                rdfmt[kgname]['all'][query] = len(content[0])
-                            else:
-                                rdfmt[kgname]['all'] = {}
-                                rdfmt[kgname]['all'][query] = content
-                        else:
-                            if mtclass in rdfmt[kgname]:
-                                rdfmt[kgname][mtclass][query] = content
-                            else:
-                                rdfmt[kgname][mtclass] = {}
-                                rdfmt[kgname][mtclass][query] = content
-            #self.create_file(kgname, rdfmt)
-            all.append(rdfmt)
-        return all
+    def get_classes(self, data):
+        classes = set()
+        for k, v in data:
+            classes.update(v.keys())
+        return classes
 
-
-class BasicRDFMTCleaner():
-
-    def create_file(self, kgname, rdfmt):
-        with open('data/' + kgname + '-rdfmt-raw' + '.json', 'w') as outfile:
-            json.dump(rdfmt, outfile)
-
-    def run(self, kgdata):
-        allrdfmt = []
-        for kg in kgdata:
-            rdfmt = {}
-            for kgname, data in kg.iteritems():
-                print kgname
-                rdfmt[kgname] = {}
-                all = data['all']
-                for mtclass, results in data.iteritems():
-                    if mtclass == 'all':
-                        continue
-                    rdfmt[kgname][mtclass] = {}
-
-                    # add the general dataset statistics to each RDF MT
-                    for q,r in all.iteritems():
-                        if not r:
-                            rdfmt[kgname][mtclass][q] = []
-                        else:
-                            if 'count' in r[0]:
-                                rdfmt[kgname][mtclass][q] = r[0]['count']
-                            else:
-                                rdfmt[kgname][mtclass][q] = r[0]['callret-0']['value']
-
-                    # clean each result for all queries for all RDF MT
-                    for q, r in results.iteritems():
-                        if not r:
-                            rdfmt[kgname][mtclass][q] = []
-                        #elif kgname == 'wikidata':
-                        #    rdfmt[kgname][mtclass][q] = r[0]
-                        elif q == 'Q10':
-                            #tmp = {}
-                            #for x in r:
-                            #    tmp[x['lt']] = x['count']
-                            #rdfmt[kgname][mtclass][q] = tmp
-                            rdfmt[kgname][mtclass][q] = r[0]
-                        #elif q == 'Q11':
-                        #    rdfmt[kgname][mtclass][q] = r[0]['callret-0']
-                        #else:
-                        #    rdfmt[kgname][mtclass][q] = r[0]['count']
-                        else:
-                            rdfmt[kgname][mtclass][q] = r[0]
-            #self.create_file(kgname, rdfmt)
-            allrdfmt.append(rdfmt)
-        return allrdfmt
-
+    def run(self, data):
+        rdfmt_raw = {}
+        classes = self.get_classes(data)
+        for c in classes:
+            rdfmt_raw[c] = {}
+            for x in range(1, 18):
+                qid = 'Q' + x
+                if x < 7:
+                    rdfmt_raw[c][qid] = data[qid]
+                else:
+                    rdfmt_raw[c][qid] = data[qid][c]
+        self.create_file(rdfmt_raw)
+        return rdfmt_raw
 
 
 class RDFMTAdder():
 
-    def create_file(self, kgname, rdfmt):
-        with open('data/rdfmt/' + kgname + '-rdfmt' + '.json', 'w') as outfile:
+    def create_file(self, rdfmt):
+        with open('data/rdfmt.json', 'w') as outfile:
             json.dump(rdfmt, outfile)
 
     def create_rdfmt_content(self, data):
@@ -177,19 +162,13 @@ class RDFMTAdder():
         return content
 
 
-    def run(self, kgdata):
-        results = {}
-        for kg in kgdata:
-            rdfmt = {}
-            for kgname, data in kg.iteritems():
-                print kgname
-                rdfmt[kgname] = {}
-                for mtclass, results in data.iteritems():
-                    content = self.create_rdfmt_content(results)
-                    rdfmt[kgname][mtclass] = content
-                self.create_file(kgname, rdfmt)
-                results[kgname] = rdfmt
-        return results
+    def run(self, rdfmt_raw):
+        rdfmt = {}
+        for mtclass, results in rdfmt_raw.iteritems():
+            content = self.create_rdfmt_content(results)
+            rdfmt[mtclass] = content
+        self.create_file(rdfmt)
+        return rdfmt
 
 
 
