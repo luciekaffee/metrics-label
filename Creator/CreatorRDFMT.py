@@ -1,5 +1,6 @@
 import json
 import os
+from os import path
 import tarfile
 
 class RDFMTMerger():
@@ -11,11 +12,9 @@ class RDFMTMerger():
     def create_Q10(self, qid, k, v, data):
         val = {}
         for t in v:
-            val[t.keys()[0]] = t.values()[0]
+            val[t.keys()[0]] = int(t.values()[0])
         if k in data[qid]:
-            tmp_val = {}
-            for t in data[qid][k]:
-                tmp_val[t.keys()[0]] = t.values()[0]
+            tmp_val = data[qid][k]
             return {key: tmp_val.get(key, 0) + val.get(key, 0) for key in set(tmp_val) | set(val)}
         else:
             return val
@@ -24,25 +23,41 @@ class RDFMTMerger():
         data = {}
         for dirname in os.listdir('data/raw'):
             for x in range(1, 18):
-                qid = 'Q' + x
-                with open('data/raw' + dirname + '/Q' + x + '.json') as infile:
+                qid = 'Q' + str(x)
+                if not path.exists('data/raw/' + dirname + '/' + qid + '.json'):
+                    continue
+                with open('data/raw/' + dirname + '/' + qid + '.json') as infile:
                     tmp = json.load(infile)
                     if x < 7:
+                        if x == 2:
+                            if not tmp:
+                                data[qid] = {}
+                            props = {}
+                            for v in tmp:
+                                props[v['p']['value']] = int(v['counter']['value'])
+                            data[qid].update(props)
+                            continue
+                        if not tmp:
+                            if qid not in data:
+                                data[qid] = 0
+                            continue
                         if qid in data:
-                            data[qid] += tmp[0]['callret-0']['value']
+                            data[qid] += int(tmp[0]['callret-0']['value'])
                         else:
-                           data[qid] = tmp[0]['callret-0']['value'] 
+                            data[qid] = int(tmp[0]['callret-0']['value'])
                     elif x == 10:
                         if qid not in data:
                             data[qid] = {}
-                        for k, v in tmp:
+                        for k, v in tmp.iteritems():
                             data[qid][k] = self.create_Q10(qid, k, v, data)
 
                     else:
                         if qid not in data:
                             data[qid] = {}
-                        for k,v in tmp:
-                            if k in data[qid]:
+                        for k, v in tmp.iteritems():
+                            if not v:
+                                data[qid][k] = 0
+                            elif k in data[qid]:
                                 data[qid][k] += int(v[0])
                             else:
                                 data[qid][k] = int(v[0])
@@ -61,8 +76,12 @@ class BasicRDFMTCreator():
 
     def get_classes(self, data):
         classes = set()
-        for k, v in data:
+        for k, v in data.iteritems():
+            if int(k.replace('Q', '')) < 7:
+                continue
             classes.update(v.keys())
+        with open('data/classes.json', 'w') as outfile:
+            json.dump(list(classes), outfile)
         return classes
 
     def run(self, data):
@@ -71,7 +90,7 @@ class BasicRDFMTCreator():
         for c in classes:
             rdfmt_raw[c] = {}
             for x in range(1, 18):
-                qid = 'Q' + x
+                qid = 'Q' + str(x)
                 if x < 7:
                     rdfmt_raw[c][qid] = data[qid]
                 else:

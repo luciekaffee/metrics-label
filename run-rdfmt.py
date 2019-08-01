@@ -2,15 +2,15 @@ from Creator.CreatorRDFMT import *
 import os
 import json
 
-basic = BasicRDFMTCreator()
-cleaner = BasicRDFMTCleaner()
+merger = RDFMTMerger()
+creator = BasicRDFMTCreator()
 adder = RDFMTAdder()
 
 
-print 'Basic start'
-results = basic.run('../Metrics_Results')
-print 'Cleaner start'
-results = cleaner.run(results)
+print 'Merger start'
+results = merger.run()
+print 'Creator start'
+results = creator.run(results)
 print 'Adder start'
 results = adder.run(results)
 
