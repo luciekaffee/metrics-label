@@ -3,7 +3,7 @@ import json
 import itertools
 import os
 
-class EnpointPreparer():
+class EnpointPreparerBio2RDF():
     def __init__(self):
         self.endpoints = {}
         self.endpoints['bio2rdf_wormbase'] = 'http://node4.research.tib.eu:1370/sparql'
@@ -41,6 +41,24 @@ class EnpointPreparer():
         self.endpoints['bio2rdf_affymetrix'] = 'http://node4.research.tib.eu:1402/sparql'
         self.endpoints['bio2rdf_biomodels'] = 'http://node4.research.tib.eu:1403/sparql'
         self.endpoints['bio2rdf_pubmedr4'] = 'http://node4.research.tib.eu:1404/sparql'
+
+    def run(self):
+        return self.endpoints
+
+class EnpointPreparerLSLOD():
+    def __init__(self):
+        self.endpoints = {}
+        self.endpoints['sider'] = 'http://node4.research.tib.eu:11360/sparql'
+        self.endpoints['affymetrix'] = 'http://node4.research.tib.eu:11361/sparql'
+        self.endpoints['chebi'] = 'http://node4.research.tib.eu:11362/sparql'
+        self.endpoints['dailymed'] = 'http://node4.research.tib.eu:11363/sparql'
+        self.endpoints['diseasome'] = 'http://node4.research.tib.eu:11364/sparql'
+        self.endpoints['drugbank'] = 'http://node4.research.tib.eu:11365/sparql'
+        self.endpoints['kegg'] = 'http://node4.research.tib.eu:11366/sparql'
+        self.endpoints['linkedct'] = 'http://node4.research.tib.eu:11367/sparql'
+        self.endpoints['linkedtcga'] = 'http://node4.research.tib.eu:11368/sparql'
+        self.endpoints['medicare'] = 'http://node4.research.tib.eu:11369/sparql'
+
     def run(self):
         return self.endpoints
 
