@@ -65,9 +65,6 @@ class RDFMTMerger():
         return data
 
 
-
-
-
 class BasicRDFMTCreator():
 
     def create_file(self, rdfmt):

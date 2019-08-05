@@ -143,9 +143,8 @@ class BasicDataCollector():
             with open(filename, 'w+') as outfile:
                 json.dump(classdata, outfile)
 
-    def run(self, endpoints):
+    def run(self, endpoints, classes=None):
         for kg, endpoint in endpoints.iteritems():
-            classes = self.get_classes(endpoint)
+            if not classes:
+                classes = self.get_classes(endpoint)
             self.write_results(classes, kg, endpoint)
-
-                        

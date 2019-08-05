@@ -4,9 +4,10 @@ import os
 import json
 
 #epp = EnpointPreparerBio2RDF()
-epp = EnpointPreparerLSLOD()
+#epp = EnpointPreparerLSLOD()
 bdc = BasicDataCollector()
 
-endpoints = epp.run()
-bdc.run(endpoints)
+#endpoints = epp.run()
+endpoints = {'DBpedia': 'http://node1.research.tib.eu:4001/sparql'}
+bdc.run(endpoints, json.load(open('data/classes-dbpedia.json')))
 
